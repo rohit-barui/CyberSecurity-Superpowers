@@ -1,0 +1,19 @@
+# Bandit Configuration
+skips: []
+exclude_dirs:
+  - tests/
+  - .venv/
+  - venv/
+  - __pycache__/
+  - node_modules/
+tests:
+  - B101  # assert used
+  - B102  # exec used
+  - B103  # set_bad_file_permissions
+  - B301  # pickle
+  - B302  # marshal
+  - B303  # md5
+  - B307  # eval
+  - B310  # urllib
+  - B311  # random
+  - B403  # subprocess without shell
