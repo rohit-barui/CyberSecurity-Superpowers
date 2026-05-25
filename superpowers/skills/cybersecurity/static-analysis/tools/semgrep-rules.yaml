@@ -1,0 +1,23 @@
+# Semgrep Rules Configuration
+rules:
+  - id: hardcoded-secrets
+    pattern: |
+      $VAR = $SECRET
+    pattern-regex: (password|secret|api_key|token|credential)\s*[:=]\s*["'][^"']+["']
+    languages: [javascript, python, go, rust, typescript]
+    severity: ERROR
+    message: Hardcoded secret detected
+
+  - id: sql-injection
+    pattern: |
+      execute("SELECT ... " + $VAR)
+    languages: [python]
+    severity: ERROR
+    message: Potential SQL injection via string concatenation
+
+  - id: command-injection
+    pattern: |
+      os.system(...)
+    languages: [python]
+    severity: ERROR
+    message: Avoid os.system, use subprocess with argument list

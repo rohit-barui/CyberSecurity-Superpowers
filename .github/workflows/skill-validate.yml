@@ -1,0 +1,22 @@
+name: Skill Validation
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate skill frontmatter
+        run: |
+          for skill in skills/*/SKILL.md; do
+            if [ -f "$skill" ]; then
+              head -5 "$skill" | grep -q "^---" || { echo "Missing frontmatter in $skill"; exit 1; }
+              echo "✓ $skill valid"
+            fi
+          done
+      - name: Check skill directory structure
+        run: |
+          for dir in skills/*/; do
+            [ -d "$dir/templates" ] || echo "Warning: $dir missing templates/"
+            [ -d "$dir/references" ] || echo "Warning: $dir missing references/"
+          done
