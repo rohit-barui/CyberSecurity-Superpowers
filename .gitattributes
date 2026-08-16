@@ -1,0 +1,21 @@
+# Auto-detect text files
+* text=auto
+
+# Shell scripts - mark as executable
+*.sh text eol=lf
+
+# YAML/TOML config files
+*.yaml text
+*.yml text
+*.toml text
+*.json text
+
+# Markdown files
+*.md text
+
+# Property files
+*.txt text
+
+# Binary assets
+*.png binary
+*.gif binary
