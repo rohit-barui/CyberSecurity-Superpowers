@@ -1,0 +1,100 @@
+# Semgrep Rules Configuration
+rules:
+  - id: hardcoded-secrets
+    pattern: |
+      $VAR = $SECRET
+    pattern-regex: (password|secret|api_key|token|credential)\s*[:=]\s*["'][^"']+["']
+    languages: [javascript, python, go, rust, typescript]
+    severity: ERROR
+    message: Hardcoded secret detected
+
+  - id: sql-injection
+    pattern: |
+      execute("SELECT ... " + $VAR)
+    languages: [python]
+    severity: ERROR
+    message: Potential SQL injection via string concatenation
+
+  - id: command-injection
+    pattern: |
+      os.system(...)
+    languages: [python]
+    severity: ERROR
+    message: Avoid os.system, use subprocess with argument list
+
+  - id: sql-injection-javascript
+    pattern: |
+      db.query("SELECT ... " + $USER_INPUT)
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: SQL injection risk via string concatenation in database query
+
+  - id: xss-reflected
+    pattern: |
+      res.send($USER_INPUT)
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: Reflected XSS via unescaped user input in response
+
+  - id: xss-inner-html
+    pattern: |
+      document.innerHTML = $USER_INPUT
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: Cross-site scripting via innerHTML assignment
+
+  - id: hardcoded-jwt-secret
+    pattern: |
+      jwt.sign($PAYLOAD, "..." )
+    languages: [javascript, typescript, python, go]
+    severity: ERROR
+    message: Hardcoded JWT signing secret detected; use environment variable
+
+  - id: command-injection-node
+    pattern: |
+      exec($USER_INPUT)
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: Command injection via exec() with user input
+
+  - id: command-injection-subprocess
+    pattern: |
+      subprocess.call($USER_INPUT, shell=True)
+    languages: [python]
+    severity: ERROR
+    message: Command injection via subprocess with shell=True
+
+  - id: insecure-tls-skip-verify
+    pattern: |
+      tls.Config{InsecureSkipVerify: true}
+    languages: [go]
+    severity: ERROR
+    message: TLS certificate verification disabled
+
+  - id: insecure-tls-ssl-context
+    pattern: |
+      ssl._create_unverified_context()
+    languages: [python]
+    severity: ERROR
+    message: SSL context created without certificate verification
+
+  - id: nosql-injection
+    pattern: |
+      db.collection.find({ $KEY: $USER_INPUT })
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: Potential NoSQL injection if user input is not sanitized
+
+  - id: path-traversal
+    pattern: |
+      open($USER_INPUT)
+    languages: [python]
+    severity: WARNING
+    message: Potential path traversal via user-controlled file path
+
+  - id: hardcoded-crypto-key
+    pattern: |
+      crypto.createCipher("aes-256-cbc", "...")
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: Hardcoded encryption key in source code

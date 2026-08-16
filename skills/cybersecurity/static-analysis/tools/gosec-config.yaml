@@ -1,0 +1,21 @@
+# Gosec Configuration
+severity: medium
+confidence: medium
+exclude:
+  - G104  # Errors unhandled (noisy)
+  - G204  # Subprocess auditing
+include:
+  - G101  # Hardcoded credentials
+  - G201  # SQL injection via format string
+  - G202  # SQL injection via string concatenation
+  - G301  # Insecure file permissions
+  - G302  # Insecure file permissions (chmod 0777)
+  - G304  # File path provided as taint input
+  - G401  # Detect MD5
+  - G402  # TLS InsecureSkipVerify
+  - G403  # Weak cryptographic key
+  - G501  # Weak SSL/TLS
+  - G502  # Weak SSL/TLS
+  - G503  # Weak SSL/TLS
+  - G504  # Weak SSL/TLS
+  - G505  # Weak SSL/TLS
