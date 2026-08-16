@@ -9,23 +9,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Secure-Coding Skill**: Security checklists for Python, JavaScript/TypeScript, and C/C++ with automated scanning capabilities.
-- **Static-Analysis Skill**: Source code analysis with multiple output formats including SARIF, JSON, and plain text. Supports configurable severity levels.
-- **Incident-Response Skill**: Predefined playbooks and runbooks for incident types including phishing, data-breach, ransomware, and DDoS. Structured IR workflow from detection to post-mortem.
-- **Compliance-Audit Skill**: Framework-aligned checklists for SOC 2, ISO 27001, PCI DSS, HIPAA, and GDPR with audit readiness scoring.
-- **Threat-Intelligence Skill**: STIX/TAXII feed integration, IOC extraction, and threat scoring with MITRE ATT&CK mapping.
+- **Threat-Modeling Skill**: STRIDE-based threat analysis with CVSS v3.1 scoring, MITRE ATT&CK mapping, and mitigation recommendations. Outputs `stride-model.md`.
+- **Secure-Coding Skill**: OWASP security checklists for JavaScript, TypeScript, Python, Go, and Rust with automated language detection. Outputs `SECURITY.md`.
+- **Static-Analysis Skill**: SAST and dependency vulnerability scanning with dry-run mock data support. Integrates semgrep, bandit, gosec, npm audit. Outputs `SECURITY_SCAN.md`.
+- **Penetration-Testing Skill**: Scoped red-team plans with OWASP WSTG and MITRE ATT&CK mapping. Outputs `pentest-plan.md`.
+- **Incident-Response Skill**: NIST SP 800-61 aligned playbooks for 5 incident types: ransomware, data-breach, phishing, ddos, insider-threat. Outputs `incident-playbook.md`.
+- **Supply-Chain Security Skill**: SBOM generation in CycloneDX and SPDX formats with dependency vulnerability scanning via `scripts/generate-sbom.sh`.
 
 ### Added (Infrastructure)
 
-- **Orchestrator**: Multi-skill pipeline runner that chains analysis across all five skills and produces consolidated reports.
-- **Pre-commit Hooks**: Automated security scanning (secrets detection, large file prevention) and code quality checks via pre-commit framework.
-- **Test Suite**: Unit and integration tests organized by skill, runnable via `bash tests/run-skill-tests.sh`.
-- **CI Pipeline**: GitHub Actions workflow for linting, testing, and validation on push and pull request.
-- **Demo Project**: Reference project at `demo/` showcasing all skills with sample data and expected outputs.
-- **Documentation**: Comprehensive README, setup guide, and per-skill SKILL.md files.
+- **Orchestrator**: Multi-skill pipeline runner with `implement`, `threat-model`, and `full` modes (`scripts/run-orchestrator.sh`).
+- **Security Suite**: Batch runner executing all 5 skills sequentially with summary table (`scripts/run-security-suite.sh`).
+- **Setup Script**: Environment verification and directory initialization (`scripts/setup.sh`).
+- **Pre-commit Hooks**: Secret scanning (regex + gitleaks), dependency auditing (npm audit, pip-audit), static analysis (eslint, bandit, gosec).
+- **Pre-push Hooks**: Threat model validation and compliance checks.
+- **Tool Configurations**: Production-grade configs for semgrep (20+ rules), bandit, gosec, gitleaks (30+ secret patterns), and trivy.
+- **Test Suite**: 5 skill-specific test scripts with mock fixtures, runnable via `bash tests/run-skill-tests.sh`.
+- **CI Pipeline**: GitHub Actions with lint, skill-tests, orchestrator-demo, and build summary jobs.
+- **Demo Project**: Node.js Express app at `examples/demo-project/` with 3 intentional vulnerabilities (SQL injection, hardcoded secret, missing security headers).
+- **Architecture Documentation**: C4 context, container, and component diagrams, sequence diagrams, and 4 ADRs.
+- **Community Files**: CONTRIBUTING.md, SECURITY.md, CODE_OF_CONDUCT.md, PR/issue templates, good-first-issues.
+- **CLI Plugin**: Claude Code plugin manifest, OpenCode installation guide.
 
 ### Security
 
 - All shell scripts use `set -euo pipefail` for strict error handling.
-- Pre-commit hooks scan for accidental secret commits using `detect-secrets` and `gitleaks`.
+- Pre-commit hooks scan for accidental secret commits using gitleaks and regex patterns.
+- Pre-push hooks validate threat models and check compliance before pushing.
 - Dependency vulnerabilities scanned via automated CI pipeline.

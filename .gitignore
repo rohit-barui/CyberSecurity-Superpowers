@@ -66,3 +66,9 @@ temp-repo/
 # Local config
 config.json
 scratch/
+
+# Generated reports
+artifacts/reports/*.md
+!artifacts/reports/example-*.md
+artifacts/sbom/*.json
+!artifacts/sbom/example-*.json

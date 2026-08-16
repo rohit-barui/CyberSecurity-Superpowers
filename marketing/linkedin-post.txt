@@ -4,17 +4,19 @@ After months of development, I'm open-sourcing a curated set of cybersecurity ag
 
 **What's included:**
 
-🔒 **Secure-Coding Skill** — Language-specific security checklists (Python, JS/TS, C/C++) with automated scanning to catch vulnerabilities before they reach production.
+🔒 **Threat-Modeling Skill** — STRIDE-based threat analysis with CVSS v3.1 scoring, MITRE ATT&CK mapping, and OWASP/NIST mitigation recommendations.
 
-🔍 **Static-Analysis Skill** — Flexible source code analysis supporting SARIF, JSON, and plain text output with configurable severity thresholds.
+🔍 **Secure-Coding Skill** — Language-specific OWASP security checklists (JavaScript, TypeScript, Python, Go, Rust) with automated scanning to catch vulnerabilities before they reach production.
 
-🚨 **Incident-Response Skill** — Pre-built playbooks and runbooks for phishing, data breaches, ransomware, and DDoS incidents. Turn chaos into a structured response.
+📋 **Static-Analysis Skill** — Source code analysis supporting SARIF, JSON, and markdown output. Integrates with semgrep, bandit, gosec, and npm audit with dry-run mock data support.
 
-📋 **Compliance-Audit Skill** — Framework-aligned checklists for SOC 2, ISO 27001, PCI DSS, HIPAA, and GDPR. Accelerate your audit readiness.
+🚨 **Penetration-Testing Skill** — Scoped red-team plans mapped to MITRE ATT&CK tactics and OWASP WSTG test cases.
 
-🌐 **Threat-Intelligence Skill** — STIX/TAXII feed integration with IOC extraction and MITRE ATT&CK mapping.
+📝 **Incident-Response Skill** — Pre-built NIST SP 800-61 aligned playbooks for ransomware, data breaches, phishing, DDoS, and insider threats.
 
-**The orchestrator** ties it all together — run a single pipeline that chains all five skills and produces a consolidated security report.
+🔗 **Supply-Chain Security Skill** — SBOM generation in CycloneDX and SPDX formats with dependency vulnerability cross-referencing.
+
+**The orchestrator** ties it all together — run a single pipeline that chains all skills and produces consolidated security reports. Pre-commit and pre-push hooks enforce security gates automatically.
 
 This project integrates seamlessly with OpenCode and Claude Code, making it dead simple to bring cybersecurity expertise into your AI-assisted development workflow.
 
@@ -22,6 +24,6 @@ The entire codebase is open source, built with shell scripts and markdown for ma
 
 Check it out, star the repo, and feel free to contribute! Good first issues are tagged and ready for new contributors.
 
-👉 [GitHub Repository Link]
+👉 https://github.com/rohit-barui/CyberSecurity-Superpowers
 
-#Cybersecurity #DevSecOps #OpenSource #SecureCoding #IncidentResponse #Compliance #ThreatIntelligence #AI #SecurityTools
+#Cybersecurity #DevSecOps #OpenSource #SecureCoding #IncidentResponse #ThreatModeling #SupplyChainSecurity #AI

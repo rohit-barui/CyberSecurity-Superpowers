@@ -8,70 +8,55 @@ The threat-modeling skill is composed of four internal components that process u
 
 | Component | Description |
 |-----------|-------------|
-| **CLI Parser** | Parses arguments (language, threat model type, project path) and validates input |
-| **Template Engine** | Loads STRIDE or LINDDUN templates from `templates/`, populates with project context |
-| **CVSS Calculator** | Computes CVSS 3.1 scores for identified threats based on user-provided impact metrics |
-| **Report Generator** | Assembles findings into markdown or SARIF output |
+| **CLI Parser** | Parses arguments (`--project`, `--output-dir`, `--dry-run`, `--format`) and validates input |
+| **Template Engine** | Loads STRIDE template from `templates/stride-model.md`, substitutes `{{PROJECT_NAME}}`, `{{DATE}}`, `{{CVSS_MATRIX}}`, `{{STRIDE_TABLE}}` tokens |
+| **CVSS Generator** | Populates a CVSS v3.1 score matrix table with threat-specific metrics (AV, AC, PR, UI, S, C, I, A) |
+| **Report Generator** | Assembles findings into markdown or JSON output |
+
+### Component Diagram
 
 ```mermaid
 C4Component
   title Component diagram for Threat-Modeling Skill
 
-  Container_Boundary(skill, "Threat-Model Skill") {
-    Component(cli, "CLI Parser", "Bash", "Parses arguments: language, model type, project path")
-    Component(tmpl, "Template Engine", "Bash", "Loads STRIDE/LINDDUN templates, populates context")
-    Component(cvss, "CVSS Calculator", "Bash", "Computes CVSS 3.1 scores")
-    Component(report, "Report Generator", "Bash", "Assembles findings into markdown/SARIF")
-
-    Rel(cli, tmpl, "Passes parsed options", "")
-    Rel(tmpl, cvss, "Sends threat data for scoring", "")
-    Rel(cvss, report, "Sends scored threats", "")
-    Rel(cli, report, "Passes output format preference", "")
+  Container_Boundary(tm, "Threat-Modeling Skill") {
+    Component(cli, "CLI Parser", "Bash", "Parses --project, --output-dir, --dry-run, --format")
+    Component(template, "Template Engine", "Bash + sed", "Loads stride-model.md, substitutes tokens")
+    Component(cvss, "CVSS Generator", "Bash", "Generates CVSS v3.1 scoring matrix")
+    Component(report, "Report Generator", "Bash", "Outputs stride-model.md or stride-model.json")
   }
 
-  System_Ext(fs, "File System", "templates/, references/")
-  System_Ext(user, "User / Orchestrator", "Invocation")
-
-  Rel(user, cli, "Arguments", "CLI")
-  Rel(tmpl, fs, "Reads", "file I/O")
-  Rel(report, fs, "Writes output", "file I/O")
+  Rel(cli, template, "Passes project name, format")
+  Rel(template, cvss, "Requests CVSS matrix")
+  Rel(template, report, "Sends populated report")
 ```
 
 ## Secure-Coding Skill Internals
-
-The secure-coding skill applies language-specific secure coding checklists to a project.
 
 ### Components
 
 | Component | Description |
 |-----------|-------------|
-| **CLI Parser** | Parses project path, language, and severity threshold arguments |
-| **Checklist Loader** | Loads the appropriate OWASP-based checklist for the detected language |
-| **Language Detector** | Auto-detects programming languages from project file extensions |
-| **Report Generator** | Produces a findings report with pass/fail status per checklist item |
+| **CLI Parser** | Parses arguments (`--language`, `--target-dir`, `--output-dir`, `--dry-run`) and validates input |
+| **Language Detector** | Auto-detects language from file extensions (`.js`, `.ts`, `.py`, `.go`, `.rs`) when `--language` is not specified |
+| **Checklist Loader** | Loads the appropriate OWASP-based checklist from `checklists/<lang>.md` |
+| **Report Generator** | Assembles checklist items and violations into `SECURITY.md` using template substitution |
+
+### Component Diagram
 
 ```mermaid
 C4Component
   title Component diagram for Secure-Coding Skill
 
-  Container_Boundary(skill, "Secure-Coding Skill") {
-    Component(cli, "CLI Parser", "Bash", "Parses project path, language, severity threshold")
-    Component(ckld, "Checklist Loader", "Bash", "Loads OWASP-based checklist for detected language")
-    Component(lang, "Language Detector", "Bash", "Auto-detects languages from project files")
-    Component(report, "Report Generator", "Bash", "Produces pass/fail findings report")
-
-    Rel(cli, lang, "Instructs detection", "")
-    Rel(cli, ckld, "Passes language", "")
-    Rel(lang, ckld, "Provides detected language", "")
-    Rel(ckld, report, "Sends checklist results", "")
-    Rel(cli, report, "Passes output format", "")
+  Container_Boundary(sc, "Secure-Coding Skill") {
+    Component(cli2, "CLI Parser", "Bash", "Parses --language, --target-dir, --output-dir, --dry-run")
+    Component(detector, "Language Detector", "Bash", "Auto-detects language from file extensions")
+    Component(loader, "Checklist Loader", "Bash", "Loads checklists/<lang>.md")
+    Component(report2, "Report Generator", "Bash", "Outputs SECURITY.md")
   }
 
-  System_Ext(fs, "File System", "checklists/, templates/, references/")
-  System_Ext(user, "User / Orchestrator", "Invocation")
-
-  Rel(user, cli, "Arguments", "CLI")
-  Rel(ckld, fs, "Reads", "file I/O")
-  Rel(lang, fs, "Scans", "file I/O")
-  Rel(report, fs, "Writes output", "file I/O")
+  Rel(cli2, detector, "Requests language detection")
+  Rel(cli2, loader, "Instructs which checklist to load")
+  Rel(loader, report2, "Sends checklist items")
+  Rel(detector, loader, "Provides detected language")
 ```

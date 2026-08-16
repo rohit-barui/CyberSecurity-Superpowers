@@ -10,9 +10,9 @@ usage() {
 Usage: $0 <mode> <description>
 
 Modes:
-  implement <desc>     Run secure-coding + static-analysis
-  threat-model <desc>  Run threat-modeling
-  full <desc>          Run all 5 skills sequentially
+  implement <desc>     Run secure-coding + static-analysis against the current directory
+  threat-model <desc>  Run threat-modeling for the given project
+  full <desc>          Run all 6 skills sequentially
 
 Options:
   --help               Show this help message
@@ -40,7 +40,7 @@ REPORTS=()
 run_skill() {
   local skill="$1"
   local script="$SKILLS_DIR/$skill/run.sh"
-  local flag="$2"
+  shift
   echo ""
   echo "========================================"
   echo "  Running: $skill"
@@ -51,8 +51,8 @@ run_skill() {
     exit 1
   fi
 
-  if bash "$script" "$flag" "$DESCRIPTION"; then
-    REPORTS+=("$skill: ✅ SUCCESS")
+  if bash "$script" "$@"; then
+    REPORTS+=("$skill: SUCCESS")
   else
     echo ""
     echo "ERROR: $skill failed. Aborting."
@@ -62,18 +62,24 @@ run_skill() {
 
 case "$MODE" in
   implement)
+    echo "Running secure-coding with language auto-detection..."
     run_skill "secure-coding" "--language" "auto"
-    run_skill "static-analysis" "--target-dir" "$DESCRIPTION"
+    echo "Running static-analysis on current directory..."
+    run_skill "static-analysis" "--target-dir" "." "--output-dir" "artifacts/reports"
     ;;
   threat-model)
-    run_skill "threat-modeling" "--project" "$DESCRIPTION"
+    echo "Running threat-modeling for project: $DESCRIPTION..."
+    run_skill "threat-modeling" "--project" "$DESCRIPTION" "--output-dir" "artifacts/reports"
     ;;
   full)
-    run_skill "threat-modeling" "--project" "$DESCRIPTION"
-    run_skill "secure-coding" "--language" "auto"
-    run_skill "static-analysis" "--target-dir" "."
-    run_skill "penetration-testing" "--target-app" "$DESCRIPTION"
-    run_skill "incident-response" "--incident-type" "ransomware"
+    echo "Running full security suite..."
+    run_skill "threat-modeling" "--project" "$DESCRIPTION" "--output-dir" "artifacts/reports"
+    run_skill "secure-coding" "--language" "auto" "--output-dir" "artifacts/reports"
+    run_skill "static-analysis" "--target-dir" "." "--output-dir" "artifacts/reports" "--dry-run"
+    run_skill "penetration-testing" "--target-app" "$DESCRIPTION" "--output-dir" "artifacts/reports"
+    run_skill "incident-response" "--incident-type" "ransomware" "--output-dir" "artifacts/reports"
+    echo ""
+    echo "Note: supply-chain-security (SBOM) requires explicit invocation via scripts/generate-sbom.sh"
     ;;
   *)
     echo "ERROR: Unknown mode '$MODE'"

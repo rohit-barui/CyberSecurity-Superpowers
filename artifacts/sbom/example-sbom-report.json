@@ -1,0 +1,357 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "version": 1,
+  "serialNumber": "urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79",
+  "metadata": {
+    "timestamp": "2026-08-16T12:00:00Z",
+    "tools": [
+      {
+        "vendor": "Cybersecurity Superpowers",
+        "name": "supply-chain-security-skill",
+        "version": "1.0.0"
+      },
+      {
+        "vendor": "Aqua Security",
+        "name": "trivy",
+        "version": "0.49.0"
+      }
+    ],
+    "authors": [
+      {
+        "name": "SBOM Generator",
+        "email": "security@cybersec-superpowers.local"
+      }
+    ],
+    "component": {
+      "type": "application",
+      "name": "example-node-app",
+      "version": "1.0.0",
+      "purl": "pkg:npm/example-node-app@1.0.0"
+    },
+    "properties": [
+      { "name": "project:type", "value": "node" },
+      { "name": "project:manifest", "value": "package.json" }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "express",
+      "version": "4.18.2",
+      "purl": "pkg:npm/express@4.18.2",
+      "bom-ref": "pkg:npm/express@4.18.2",
+      "licenses": [
+        { "license": { "id": "MIT" } }
+      ],
+      "properties": [
+        { "name": "dependency:type", "value": "direct" }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "lodash",
+      "version": "4.17.21",
+      "purl": "pkg:npm/lodash@4.17.21",
+      "bom-ref": "pkg:npm/lodash@4.17.21",
+      "licenses": [
+        { "license": { "id": "MIT" } }
+      ],
+      "properties": [
+        { "name": "dependency:type", "value": "direct" }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "react",
+      "version": "18.2.0",
+      "purl": "pkg:npm/react@18.2.0",
+      "bom-ref": "pkg:npm/react@18.2.0",
+      "licenses": [
+        { "license": { "id": "MIT" } }
+      ],
+      "properties": [
+        { "name": "dependency:type", "value": "direct" }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "axios",
+      "version": "1.6.0",
+      "purl": "pkg:npm/axios@1.6.0",
+      "bom-ref": "pkg:npm/axios@1.6.0",
+      "licenses": [
+        { "license": { "id": "MIT" } }
+      ],
+      "properties": [
+        { "name": "dependency:type", "value": "direct" }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "body-parser",
+      "version": "1.20.2",
+      "purl": "pkg:npm/body-parser@1.20.2",
+      "bom-ref": "pkg:npm/body-parser@1.20.2",
+      "licenses": [
+        { "license": { "id": "MIT" } }
+      ],
+      "properties": [
+        { "name": "dependency:type", "value": "transitive" }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "debug",
+      "version": "4.3.4",
+      "purl": "pkg:npm/debug@4.3.4",
+      "bom-ref": "pkg:npm/debug@4.3.4",
+      "licenses": [
+        { "license": { "id": "MIT" } }
+      ],
+      "properties": [
+        { "name": "dependency:type", "value": "transitive" }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "follow-redirects",
+      "version": "1.15.3",
+      "purl": "pkg:npm/follow-redirects@1.15.3",
+      "bom-ref": "pkg:npm/follow-redirects@1.15.3",
+      "licenses": [
+        { "license": { "id": "MIT" } }
+      ],
+      "properties": [
+        { "name": "dependency:type", "value": "transitive" }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "js-tokens",
+      "version": "4.0.0",
+      "purl": "pkg:npm/js-tokens@4.0.0",
+      "bom-ref": "pkg:npm/js-tokens@4.0.0",
+      "licenses": [
+        { "license": { "id": "MIT" } }
+      ],
+      "properties": [
+        { "name": "dependency:type", "value": "transitive" }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "loose-envify",
+      "version": "1.4.0",
+      "purl": "pkg:npm/loose-envify@1.4.0",
+      "bom-ref": "pkg:npm/loose-envify@1.4.0",
+      "licenses": [
+        { "license": { "id": "MIT" } }
+      ],
+      "properties": [
+        { "name": "dependency:type", "value": "transitive" }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ms",
+      "version": "2.1.2",
+      "purl": "pkg:npm/ms@2.1.2",
+      "bom-ref": "pkg:npm/ms@2.1.2",
+      "licenses": [
+        { "license": { "id": "MIT" } }
+      ],
+      "properties": [
+        { "name": "dependency:type", "value": "transitive" }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "proxy-from-env",
+      "version": "1.1.0",
+      "purl": "pkg:npm/proxy-from-env@1.1.0",
+      "bom-ref": "pkg:npm/proxy-from-env@1.1.0",
+      "licenses": [
+        { "license": { "id": "MIT" } }
+      ],
+      "properties": [
+        { "name": "dependency:type", "value": "transitive" }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "scheduler",
+      "version": "0.23.0",
+      "purl": "pkg:npm/scheduler@0.23.0",
+      "bom-ref": "pkg:npm/scheduler@0.23.0",
+      "licenses": [
+        { "license": { "id": "MIT" } }
+      ],
+      "properties": [
+        { "name": "dependency:type", "value": "transitive" }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:npm/example-node-app@1.0.0",
+      "dependsOn": [
+        "pkg:npm/express@4.18.2",
+        "pkg:npm/lodash@4.17.21",
+        "pkg:npm/react@18.2.0",
+        "pkg:npm/axios@1.6.0"
+      ]
+    },
+    {
+      "ref": "pkg:npm/express@4.18.2",
+      "dependsOn": [
+        "pkg:npm/body-parser@1.20.2",
+        "pkg:npm/debug@4.3.4"
+      ]
+    },
+    {
+      "ref": "pkg:npm/react@18.2.0",
+      "dependsOn": [
+        "pkg:npm/loose-envify@1.4.0",
+        "pkg:npm/scheduler@0.23.0"
+      ]
+    },
+    {
+      "ref": "pkg:npm/axios@1.6.0",
+      "dependsOn": [
+        "pkg:npm/follow-redirects@1.15.3",
+        "pkg:npm/proxy-from-env@1.1.0"
+      ]
+    },
+    {
+      "ref": "pkg:npm/loose-envify@1.4.0",
+      "dependsOn": [
+        "pkg:npm/js-tokens@4.0.0"
+      ]
+    },
+    {
+      "ref": "pkg:npm/debug@4.3.4",
+      "dependsOn": [
+        "pkg:npm/ms@2.1.2"
+      ]
+    }
+  ],
+  "vulnerabilities": [
+    {
+      "id": "CVE-2023-1234",
+      "source": {
+        "name": "NVD",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2023-1234"
+      },
+      "ratings": [
+        {
+          "source": {
+            "name": "NVD",
+            "url": "https://nvd.nist.gov/vuln/detail/CVE-2023-1234"
+          },
+          "score": 7.5,
+          "severity": "high",
+          "method": "CVSSv31",
+          "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+        }
+      ],
+      "description": "Prototype Pollution in lodash via defaultsDeep function allows remote attackers to modify object properties",
+      "recommendation": "Upgrade lodash to version 4.17.22 or later",
+      "affected": [
+        {
+          "ref": "pkg:npm/lodash@4.17.21",
+          "versions": [
+            { "version": "4.17.21", "status": "affected" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2023-5678",
+      "source": {
+        "name": "GHSA",
+        "url": "https://github.com/advisories/GHSA-xxxx-yyyy-zzzz"
+      },
+      "ratings": [
+        {
+          "source": {
+            "name": "GHSA",
+            "url": "https://github.com/advisories/GHSA-xxxx-yyyy-zzzz"
+          },
+          "score": 9.8,
+          "severity": "critical",
+          "method": "CVSSv31",
+          "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+        }
+      ],
+      "description": "Server-Side Request Forgery in axios allows attackers to bypass proxy protections and access internal network resources",
+      "recommendation": "Upgrade axios to version 1.6.1 or later",
+      "affected": [
+        {
+          "ref": "pkg:npm/axios@1.6.0",
+          "versions": [
+            { "version": "1.6.0", "status": "affected" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2023-9012",
+      "source": {
+        "name": "NVD",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2023-9012"
+      },
+      "ratings": [
+        {
+          "source": {
+            "name": "NVD",
+            "url": "https://nvd.nist.gov/vuln/detail/CVE-2023-9012"
+          },
+          "score": 5.3,
+          "severity": "medium",
+          "method": "CVSSv31",
+          "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N"
+        }
+      ],
+      "description": "Regular Expression Denial of Service (ReDoS) in express allows remote attackers to cause a denial of service",
+      "recommendation": "Upgrade express to version 4.18.3 or later",
+      "affected": [
+        {
+          "ref": "pkg:npm/express@4.18.2",
+          "versions": [
+            { "version": "4.18.2", "status": "affected" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CVE-2024-1234",
+      "source": {
+        "name": "NVD",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-1234"
+      },
+      "ratings": [
+        {
+          "source": {
+            "name": "NVD",
+            "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-1234"
+          },
+          "score": 6.1,
+          "severity": "medium",
+          "method": "CVSSv31",
+          "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N"
+        }
+      ],
+      "description": "Open Redirect vulnerability in follow-redirects allows attackers to redirect users to malicious URLs",
+      "recommendation": "Upgrade follow-redirects to version 1.15.4 or later",
+      "affected": [
+        {
+          "ref": "pkg:npm/follow-redirects@1.15.3",
+          "versions": [
+            { "version": "1.15.3", "status": "affected" }
+          ]
+        }
+      ]
+    }
+  ]
+}

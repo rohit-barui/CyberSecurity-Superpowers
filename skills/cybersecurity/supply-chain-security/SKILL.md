@@ -1,3 +1,8 @@
+---
+name: supply-chain-security
+description: "Generates SBOMs in SPDX and CycloneDX formats, performs dependency vulnerability scanning, and detects supply-chain attacks."
+---
+
 # Supply-Chain Security Skill
 
 ## Purpose
@@ -41,6 +46,12 @@ Capabilities:
 |--------|------|--------|
 | SBOM Report (JSON) | `artifacts/sbom/sbom-report.json` | CycloneDX / SPDX JSON |
 | SBOM Report (Markdown) | `artifacts/sbom/sbom-report.md` | Markdown |
+
+## CLI Usage
+
+```bash
+bash scripts/generate-sbom.sh --target-dir . --output-dir artifacts/sbom
+```
 
 ## Dependencies
 

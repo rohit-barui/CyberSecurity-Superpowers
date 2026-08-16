@@ -16,31 +16,31 @@ You MUST use this skill during the implementation phase, for every code change, 
 1. **Identify the programming language** of the code being changed.
 2. **Apply the corresponding OWASP secure coding checklist** for that language:
    - For JavaScript/Node.js: OWASP Node.js Goat and OWASP Top 10 for Node.js
+   - For TypeScript: OWASP Node.js Goat and OWASP Top 10 for Node.js
    - For Python: OWASP Python Security Project
-   - For Java: OWASP Java HTML Sanitizer Project and OWASP Top 10 for Java
    - For Go: OWASP Go Security Project
    - For Rust: OWASP Rust Security Guide
-   - For C/C++: OWASP C/C++ Secure Coding
-   - For C#: OWASP C# Secure Coding Guidelines
-   - For PHP: OWASP PHP Security Project
-   - For Ruby: OWASP Ruby Security Project
-   - For Swift: OWASP iOS Security Project
-   - For Kotlin: OWASP Android Security
 3. **Run language-specific linters** and security scanners (e.g., ESLint with security plugins, Bandit for Python, etc.).
-4. **Document any violations** and required fixes in a `SECURITY.md` file in the project root (or update if it exists).
+4. **Document any violations** and required fixes in a `SECURITY.md` file in the output directory (or update if it exists).
 5. **Provide remediation steps** for each violation found.
+
+## Supported Languages
+
+Currently supported checklists: JavaScript, TypeScript, Python, Go, Rust. See `skills/cybersecurity/secure-coding/checklists/` for available files.
 
 ## Output
 
-- Updated `SECURITY.md` file with:
+- `SECURITY.md` file with:
   - List of secure coding rules applied
   - Any violations found
   - Remediation steps for each violation
   - Timestamp and version of the checklists used
 
-## Examples
+## CLI Usage
 
-See `skills/cybersecurity/secure-coding/examples/` for sample SECURITY.md files.
+```bash
+bash skills/cybersecurity/secure-coding/run.sh --language javascript --target-dir examples/demo-project --output-dir artifacts/reports
+```
 
 ## References
 

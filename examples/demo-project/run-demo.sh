@@ -17,9 +17,9 @@ bash skills/cybersecurity/static-analysis/run.sh --target-dir examples/demo-proj
 echo ""
 echo "=== Verifying Reports ==="
 
-THREAT_REPORT="$REPORTS_DIR/threat-modeling-report.json"
-SECURE_REPORT="$REPORTS_DIR/secure-coding-report.json"
-STATIC_REPORT="$REPORTS_DIR/static-analysis-report.json"
+THREAT_REPORT="$REPORTS_DIR/stride-model.md"
+SECURE_REPORT="$REPORTS_DIR/SECURITY.md"
+STATIC_REPORT="$REPORTS_DIR/SECURITY_SCAN.md"
 
 ALL_EXIST=true
 

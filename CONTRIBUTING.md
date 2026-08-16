@@ -4,8 +4,8 @@
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/rohit-barui/cybersecurity-superpowers.git
-   cd cybersecurity-superpowers
+   git clone https://github.com/rohit-barui/CyberSecurity-Superpowers.git
+   cd CyberSecurity-Superpowers
    ```
 
 2. Run the setup script:
@@ -20,11 +20,6 @@ Execute the full test suite:
 bash tests/run-skill-tests.sh
 ```
 
-Run tests for a specific skill:
-```bash
-bash tests/run-skill-tests.sh --skill <skill-name>
-```
-
 ## Branch Naming Conventions
 
 - `task/<name>` — New feature or task (e.g., `task/add-java-checklists`)
@@ -37,7 +32,6 @@ bash tests/run-skill-tests.sh --skill <skill-name>
 - Include test results in the PR description.
 - Update `CHANGELOG.md` with the changes under the appropriate section.
 - All CI checks must pass before merging.
-- Squash commits before merging.
 
 ## Code Style
 
@@ -48,7 +42,8 @@ bash tests/run-skill-tests.sh --skill <skill-name>
 
 ## Security
 
-- Pre-commit hooks are configured to check for secrets, large files, and code quality.
+- Custom pre-commit hooks in `hooks/pre-commit/` scan for secrets, audit dependencies, and run static analysis automatically.
+- Custom pre-push hooks in `hooks/pre-push/` validate threat models and check compliance.
 - Never commit secrets, API keys, or credentials to the repository.
-- Run `pre-commit run --all-files` before pushing.
+- Install hooks via `bash scripts/init-project.sh`.
 - Report vulnerabilities per our [SECURITY.md](SECURITY.md) policy.

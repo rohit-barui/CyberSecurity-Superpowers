@@ -2,7 +2,7 @@
 
 ## System Boundary
 
-The Cybersecurity Superpowers system provides AI-assisted security engineering through reusable skill modules that integrate with any AI coding harness. It acts as a security co-pilot, guiding developers through threat modeling, secure coding, static analysis, penetration testing, incident response, compliance auditing, secret detection, supply chain security, and security architecture reviews.
+The Cybersecurity Superpowers system provides AI-assisted security engineering through reusable skill modules that integrate with any AI coding harness. It acts as a security co-pilot, guiding developers through threat modeling, secure coding, static analysis, penetration testing, incident response, and supply chain security reviews.
 
 ## External Actors
 

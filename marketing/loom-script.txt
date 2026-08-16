@@ -16,13 +16,14 @@ Whether you're using OpenCode, Claude Code, or just bash, this project gives you
 
 ## [0:20 - 0:45] What It Is
 
-"This project packages five core cybersecurity skills into a single, composable pipeline:
+"This project packages six cybersecurity skills into a single, composable pipeline:
 
-- Secure-coding checklists for multiple languages
+- Threat-modeling with STRIDE and CVSS scoring
+- Secure-coding checklists for JavaScript, TypeScript, Python, Go, and Rust
 - Static analysis with SARIF and JSON output
-- Incident response playbooks and runbooks
-- Compliance auditing across major frameworks
-- Threat intelligence with STIX/TAXII integration
+- Penetration testing with MITRE ATT&CK and OWASP WSTG mapping
+- Incident response playbooks aligned to NIST SP 800-61
+- Supply-chain security with SBOM generation
 
 Each skill is a self-contained directory with a SKILL.md, run scripts, and configuration files."
 
@@ -30,26 +31,26 @@ Each skill is a self-contained directory with a SKILL.md, run scripts, and confi
 
 ## [0:45 - 1:30] Demo Walkthrough — Single Skill
 
-"Let me show you how it works. I'll navigate to the project directory and run the secure-coding skill against a sample Python file:
+"Let me show you how it works. I'll navigate to the project directory and run the threat-modeling skill against a sample app:
 
 ```
-cd cybersecurity-superpowers
-bash skills/secure-coding/run.sh demo/secure-coding/sample.py
+cd CyberSecurity-Superpowers
+bash skills/cybersecurity/threat-modeling/run.sh --project "Demo App" --output-dir artifacts/reports
 ```
 
-You can see it checks for common vulnerabilities — SQL injection patterns, hardcoded credentials, insecure deserialization — and provides actionable remediation advice."
+This generates a complete STRIDE threat model with CVSS scores, mitigation recommendations, and references to OWASP and NIST standards."
 
 ---
 
 ## [1:30 - 2:00] Demo Walkthrough — Orchestrator
 
-"Now let's run the full orchestrator, which chains all five skills together:
+"Now let's run the full orchestrator, which chains multiple skills together:
 
 ```
-bash skills/orchestration/run.sh --target demo/ --output artifacts/reports/
+bash scripts/run-orchestrator.sh full "Demo App"
 ```
 
-The orchestrator runs each skill sequentially, passing artifacts between stages, and produces a consolidated security report. This is perfect for CI/CD pipelines or pre-release security gates."
+The orchestrator runs each skill sequentially — threat modeling, secure coding, static analysis, penetration testing, and incident response. It produces reports in `artifacts/reports/`. This is perfect for CI/CD pipelines or pre-release security gates."
 
 ---
 
@@ -71,6 +72,6 @@ Thanks for watching!"
 
 ## End Screen Text
 
-**GitHub**: https://github.com/rohit-barui/cybersecurity-superpowers
+**GitHub**: https://github.com/rohit-barui/CyberSecurity-Superpowers
 **License**: MIT
 **Tags**: #Cybersecurity #DevSecOps #OpenSource

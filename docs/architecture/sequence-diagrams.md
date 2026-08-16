@@ -2,7 +2,7 @@
 
 ## Diagram 1: Orchestrator `full` Mode Execution
 
-The developer invokes the orchestrator in `full` mode, which runs all skills sequentially. Each skill executes its `run.sh` and returns results to the orchestrator.
+The developer invokes the orchestrator in `full` mode, which runs all skills sequentially. Each skill executes its `run.sh` and returns results.
 
 ```mermaid
 sequenceDiagram
@@ -12,52 +12,59 @@ sequenceDiagram
     participant TM as Threat-Model Skill
     participant SC as Secure-Coding Skill
     participant SA as Static-Analysis Skill
+    participant PT as Pentest Skill
+    participant IR as Incident-Response Skill
     participant Tools as External Tools
 
     Dev->>Harness: Run full security review
-    Harness->>Orch: ./orchestrator.sh full
-    Orch->>TM: run.sh threat-model
+    Harness->>Orch: bash scripts/run-orchestrator.sh full "my-app"
+    Orch->>TM: run.sh --project "my-app"
     TM->>TM: Load STRIDE templates
-    TM-->>Orch: threat-model report
-    Orch->>SC: run.sh secure-coding
-    SC->>SC: Load language checklists
-    SC-->>Orch: secure-coding report
-    Orch->>SA: run.sh static-analysis
-    SA->>Tools: Invoke semgrep/bandit/gosec
-    Tools-->>SA: SARIF results
-    SA-->>Orch: static-analysis report
-    Orch-->>Harness: Consolidated full report
-    Harness-->>Dev: Display findings & recommendations
+    TM-->>Orch: stride-model.md
+    Orch->>SC: run.sh --language auto
+    SC->>SC: Detect language, load checklists
+    SC-->>Orch: SECURITY.md
+    Orch->>SA: run.sh --target-dir . --dry-run
+    SA->>Tools: Simulate semgrep/bandit/gosec
+    Tools-->>SA: Mock findings
+    SA-->>Orch: SECURITY_SCAN.md
+    Orch->>PT: run.sh --target-app "my-app"
+    PT-->>Orch: pentest-plan.md
+    Orch->>IR: run.sh --incident-type ransomware
+    IR-->>Orch: incident-playbook.md
+    Orch-->>Harness: All reports generated
+    Harness-->>Dev: Display findings summary
 ```
 
 ## Diagram 2: Pre-Commit Hook Execution Flow
 
-A developer commits code, triggering the Git pre-commit hook. The hook runs secret detection and secure-coding checks on staged files.
+A developer commits code, triggering the Git pre-commit hook. The hook runs secret detection, dependency audit, and static analysis on staged files.
 
 ```mermaid
 sequenceDiagram
     participant Dev as Developer
     participant Git as Git
     participant Hook as Pre-Commit Hook
-    participant Orch as Orchestrator
-    participant Secret as Secret Detection
-    participant SC as Secure-Coding Skill
+    participant Secret as hooks/pre-commit/secret-scan.sh
+    participant Audit as hooks/pre-commit/dependency-audit.sh
+    participant SA as hooks/pre-commit/static-analysis.sh
 
     Dev->>Git: git commit
     Git->>Hook: Trigger pre-commit hook
     Hook->>Hook: Identify staged files
-    Hook->>Orch: ./orchestrator.sh hook
-    Orch->>Secret: run.sh gitleaks --staged
-    Secret->>Secret: Scan staged diff
-    Secret-->>Orch: secrets results
-    Orch->>SC: run.sh secure-coding --staged
-    SC->>SC: Check staged code
-    SC-->>Orch: coding results
-    Orch-->>Hook: combined hook results
-    alt No issues found
+    Hook->>Secret: Scan for secrets
+    Secret->>Secret: Check staged diff against regex patterns
+    Secret-->>Hook: Pass/Fail
+    Hook->>Audit: Audit dependencies
+    Audit->>Audit: npm audit / pip-audit / go mod verify
+    Audit-->>Hook: Pass/Warn
+    Hook->>SA: Run static analysis
+    SA->>SA: eslint / bandit / gosec
+    SA-->>Hook: Warnings only
+    alt No secrets found
         Hook-->>Git: Exit 0 (allow commit)
         Git-->>Dev: Commit successful
-    else Issues found
+    else Secrets detected
         Hook-->>Git: Exit 1 (block commit)
         Git-->>Dev: Commit blocked, review findings
     end
@@ -65,37 +72,36 @@ sequenceDiagram
 
 ## Diagram 3: CI Pipeline Execution Flow
 
-A pull request is opened on GitHub, triggering a GitHub Actions workflow. The CI pipeline runs the orchestrator in `ci` mode for automated security gates.
+A pull request is opened on GitHub, triggering a GitHub Actions workflow. The CI pipeline runs lint, skill tests, and orchestrator demo jobs.
 
 ```mermaid
 sequenceDiagram
     participant Dev as Developer
     participant GH as GitHub
     participant GHA as GitHub Actions
-    participant Orch as Orchestrator
-    participant SA as Static-Analysis Skill
-    participant SBOM as Supply-Chain Skill
-    participant Tools as External Tools
+    participant Lint as Lint Job
+    participant Tests as Skill Tests Job
+    participant Orch as Orchestrator Demo Job
+    participant Build as Build Summary Job
 
     Dev->>GH: Push branch / Open PR
     GH->>GHA: Trigger CI workflow
-    GHA->>GHA: Checkout code & setup env
-    GHA->>Orch: ./orchestrator.sh ci
-    Orch->>SA: run.sh static-analysis
-    SA->>Tools: semgrep --config=auto
-    Tools-->>SA: results.sarif
-    SA-->>Orch: findings.json
-    Orch->>SBOM: run.sh supply-chain
-    SBOM->>Tools: trivy fs .
-    Tools-->>SBOM: sbom.json + vulns
-    SBOM-->>Orch: sbom-report.json
-    Orch-->>GHA: combined-ci-report.json
-    GHA->>GHA: Evaluate security gate
-    alt Gate passes
-        GHA-->>GH: ✅ Checks passed
+    GHA->>Lint: Run lint job
+    Lint->>Lint: shellcheck + yamllint + frontmatter check
+    Lint-->>GHA: Pass/Fail
+    GHA->>Tests: Run skill tests job
+    Tests->>Tests: bash tests/run-skill-tests.sh
+    Tests-->>GHA: Pass/Fail
+    GHA->>Orch: Run orchestrator demo job
+    Orch->>Orch: bash scripts/run-orchestrator.sh threat-model "Demo CI App"
+    Orch-->>GHA: Pass/Fail
+    GHA->>Build: Run build summary
+    Build->>Build: Consolidate results
+    alt All jobs pass
+        Build-->>GH: ✅ CI passed
         GH-->>Dev: PR ready for review
-    else Gate fails
-        GHA-->>GH: ❌ Security gate failed
-        GH-->>Dev: PR blocked, view CI report
+    else Any job fails
+        Build-->>GH: ❌ CI failed
+        GH-->>Dev: Check CI logs
     end
 ```
