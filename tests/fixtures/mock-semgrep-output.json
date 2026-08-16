@@ -1,0 +1,86 @@
+[
+  {
+    "id": "SEMGREP-001",
+    "tool": "semgrep",
+    "type": "sql-injection",
+    "location": {
+      "file": "src/api/users/login.go",
+      "line": 42,
+      "column": 14,
+      "function": "authenticateUser"
+    },
+    "severity": "Critical",
+    "description": "Detected SQL injection vulnerability: unsanitized user input concatenated directly into SQL query string. Parameterized queries must be used instead.",
+    "remediation": "Replace string concatenation with parameterized queries (e.g., using `db.Query` with `?` placeholders in Go). Validate and sanitize all user inputs."
+  },
+  {
+    "id": "SEMGREP-002",
+    "tool": "semgrep",
+    "type": "hardcoded-secret",
+    "location": {
+      "file": "src/config/database.go",
+      "line": 15,
+      "column": 10,
+      "function": "GetConnectionString"
+    },
+    "severity": "High",
+    "description": "Hardcoded database password detected in source code. Credentials must never be stored in plaintext in the codebase.",
+    "remediation": "Move the database password to environment variables or a secure vault (e.g., HashiCorp Vault, AWS Secrets Manager). Remove all hardcoded credentials from source files."
+  },
+  {
+    "id": "SEMGREP-003",
+    "tool": "semgrep",
+    "type": "xss",
+    "location": {
+      "file": "src/web/views/profile.html",
+      "line": 87,
+      "column": 22,
+      "function": "renderProfile"
+    },
+    "severity": "High",
+    "description": "Cross-site scripting (XSS) vulnerability: user-supplied data is rendered in HTML without proper escaping or sanitization.",
+    "remediation": "Use context-aware output encoding (HTML entity encoding). Implement Content Security Policy (CSP) headers. Use a templating engine with auto-escaping enabled."
+  },
+  {
+    "id": "SEMGREP-004",
+    "tool": "semgrep",
+    "type": "command-injection",
+    "location": {
+      "file": "src/utils/exec.go",
+      "line": 23,
+      "column": 8,
+      "function": "runSystemCommand"
+    },
+    "severity": "Critical",
+    "description": "Command injection vulnerability: user-controlled input is passed to `exec.Command` without validation. An attacker could execute arbitrary system commands.",
+    "remediation": "Avoid shell execution entirely. Use safer alternatives like `os/exec` with fixed arguments. Validate and sanitize any input passed to system commands."
+  },
+  {
+    "id": "SEMGREP-005",
+    "tool": "semgrep",
+    "type": "weak-crypto",
+    "location": {
+      "file": "src/crypto/hash.go",
+      "line": 34,
+      "column": 5,
+      "function": "hashPassword"
+    },
+    "severity": "Medium",
+    "description": "Use of weak cryptographic algorithm (MD5) for password hashing. MD5 is considered broken and vulnerable to collision attacks.",
+    "remediation": "Replace MD5 with bcrypt, scrypt, or Argon2 for password hashing. For general hashing use SHA-256 or SHA-3."
+  },
+  {
+    "id": "SEMGREP-006",
+    "tool": "semgrep",
+    "type": "dependency-vuln",
+    "location": {
+      "file": "package.json",
+      "line": 52,
+      "column": 3,
+      "function": "N/A"
+    },
+    "severity": "Critical",
+    "description": "Critical vulnerability in dependency `lodash` v4.17.20 (CVE-2021-23337) allowing prototype pollution and potential remote code execution.",
+    "remediation": "Update `lodash` to version 4.17.21 or later. Run `npm update lodash` and verify no breaking changes. Review dependency tree for other vulnerable transitive dependencies."
+  }
+]

@@ -1,0 +1,64 @@
+{
+  "errors": [],
+  "generated_at": "2026-08-16T10:00:00Z",
+  "metrics": {
+    "_totals": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.MEDIUM": 1,
+      "CONFIDENCE.LOW": 1,
+      "SEVERITY.HIGH": 2,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.LOW": 1
+    }
+  },
+  "results": [
+    {
+      "test_id": "B105",
+      "test_name": "hardcoded_password_string",
+      "issue_text": "Possible hardcoded password detected in config initialization. Hardcoded passwords increase the risk of credential exposure and unauthorized access.",
+      "issue_severity": "HIGH",
+      "issue_confidence": "HIGH",
+      "filename": "src/config/settings.py",
+      "line_number": 27,
+      "line_range": [25, 30],
+      "code": "DB_PASSWORD = 'supersecret123'",
+      "more_info": "https://bandit.readthedocs.io/en/latest/plugins/b105_hardcoded_password_string.html"
+    },
+    {
+      "test_id": "B307",
+      "test_name": "blacklist_eval",
+      "issue_text": "Use of the `eval()` function detected. `eval()` can execute arbitrary Python code and should only be used in very specific, controlled circumstances.",
+      "issue_severity": "MEDIUM",
+      "issue_confidence": "MEDIUM",
+      "filename": "src/utils/helpers.py",
+      "line_number": 45,
+      "line_range": [44, 46],
+      "code": "result = eval(user_input)",
+      "more_info": "https://bandit.readthedocs.io/en/latest/plugins/b307_blacklist_eval.html"
+    },
+    {
+      "test_id": "B602",
+      "test_name": "subprocess_with_shell",
+      "issue_text": "Subprocess call with `shell=True` identified. Using shell=True can enable command injection if argument strings are not properly sanitized.",
+      "issue_severity": "HIGH",
+      "issue_confidence": "HIGH",
+      "filename": "src/deploy/deploy.py",
+      "line_number": 88,
+      "line_range": [86, 92],
+      "code": "subprocess.run(cmd, shell=True)",
+      "more_info": "https://bandit.readthedocs.io/en/latest/plugins/b602_subprocess_with_shell.html"
+    },
+    {
+      "test_id": "B303",
+      "test_name": "blacklist_import_md5",
+      "issue_text": "Use of insecure MD5 hash function detected. MD5 is not considered a secure cryptographic hash and is vulnerable to collision attacks.",
+      "issue_severity": "LOW",
+      "issue_confidence": "LOW",
+      "filename": "src/crypto/legacy.py",
+      "line_number": 12,
+      "line_range": [10, 14],
+      "code": "import hashlib; hashlib.md5()",
+      "more_info": "https://bandit.readthedocs.io/en/latest/plugins/b303_blacklist_import_md5.html"
+    }
+  ]
+}

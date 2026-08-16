@@ -1,0 +1,66 @@
+name: Release
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Read VERSION
+        run: |
+          if [ -f VERSION ]; then
+            echo "VERSION=$(cat VERSION | tr -d '\n\r')" >> $GITHUB_ENV
+          else
+            echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+          fi
+      - name: Generate release notes
+        run: |
+          if [ -f CHANGELOG.md ]; then
+            tag="${{ github.ref_name }}"
+            prev_tag=$(git tag --sort=-version:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+' | head -2 | tail -1 || true)
+            if [ -n "$prev_tag" ]; then
+              awk -v t="$tag" -v p="$prev_tag" '
+                /^## / { if (found) exit; if ($0 ~ t) found=1; next }
+                found { print }
+              ' CHANGELOG.md > release-notes.md
+            else
+              awk '/^## / { if (found) exit; found=1; next } found' CHANGELOG.md > release-notes.md
+            fi
+            if [ ! -s release-notes.md ]; then
+              echo "Release ${{ github.ref_name }}" > release-notes.md
+            fi
+          else
+            echo "Release ${{ github.ref_name }}" > release-notes.md
+          fi
+      - name: Create release archive
+        run: |
+          mkdir -p artifacts
+          repo_name=$(basename ${{ github.repository }})
+          git archive --format=tar.gz --output=artifacts/$repo_name-${{ env.VERSION }}.tar.gz HEAD
+          git archive --format=zip --output=artifacts/$repo_name-${{ env.VERSION }}.zip HEAD
+      - name: Include artifacts directory
+        run: |
+          if [ -d artifacts ] && [ "$(ls -A artifacts 2>/dev/null)" ]; then
+            echo "artifacts directory has content"
+          else
+            mkdir -p artifacts
+          fi
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ env.VERSION }}
+          body_path: release-notes.md
+          files: |
+            artifacts/*.tar.gz
+            artifacts/*.zip
+          draft: false
+          prerelease: false
