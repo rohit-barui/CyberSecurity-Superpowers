@@ -1,0 +1,15 @@
+This is a PLACEHOLDER for demo.gif.
+
+Replace this file with an actual animated GIF captured from a terminal session.
+
+What the real demo.gif would show:
+- A terminal recording (~15 second loop) of running:
+    bash examples/demo-project/run-demo.sh
+- Three skills running sequentially with their terminal output
+- The generated report files appearing in the output
+- A clean, looped demo showing the full workflow from start to finish
+
+Tools recommended to generate the real asset:
+- asciinema (terminal recording) + agg (asciinema-to-GIF converter)
+- QuickTime Player screen recording + ffmpeg to convert to GIF
+- peek (Linux) or Kap (macOS) for direct GIF capture
