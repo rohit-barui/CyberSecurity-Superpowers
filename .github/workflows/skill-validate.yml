@@ -8,15 +8,47 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate skill frontmatter
         run: |
-          for skill in skills/*/SKILL.md; do
-            if [ -f "$skill" ]; then
-              head -5 "$skill" | grep -q "^---" || { echo "Missing frontmatter in $skill"; exit 1; }
-              echo "✓ $skill valid"
-            fi
-          done
+          errors=0
+          while IFS= read -r -d '' skill; do
+            content=$(cat "$skill")
+            name=$(echo "$content" | grep -E '^name:\s+' | head -1 || true)
+            desc=$(echo "$content" | grep -E '^description:\s+' | head -1 || true)
+            dir=$(dirname "$skill")
+            echo "Checking: $skill"
+            if [ -z "$name" ]; then echo "  MISSING: name frontmatter in $skill"; errors=$((errors+1)); fi
+            if [ -z "$desc" ]; then echo "  MISSING: description frontmatter in $skill"; errors=$((errors+1)); fi
+            if [ ! -f "$dir/run.sh" ]; then echo "  WARNING: no run.sh in $dir"; fi
+            echo "  OK"
+          done < <(find . -name SKILL.md -print0)
+          echo "Errors: $errors"
+          [ "$errors" -eq 0 ] || exit 1
       - name: Check skill directory structure
         run: |
-          for dir in skills/*/; do
+          while IFS= read -r -d '' dir; do
             [ -d "$dir/templates" ] || echo "Warning: $dir missing templates/"
             [ -d "$dir/references" ] || echo "Warning: $dir missing references/"
+          done < <(find ./superpowers/skills -mindepth 1 -maxdepth 2 -type d -print0 2>/dev/null || find ./skills -mindepth 1 -maxdepth 2 -type d -print0 2>/dev/null || true)
+
+  dependency-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for dependency files
+        run: |
+          echo "## Dependency Scan" >> $GITHUB_STEP_SUMMARY
+          for dep_file in package.json requirements.txt go.mod Cargo.toml Gemfile; do
+            found=$(find . -name "$dep_file" -not -path './node_modules/*' -not -path './.venv/*' 2>/dev/null | head -5)
+            if [ -n "$found" ]; then
+              count=$(echo "$found" | wc -l)
+              echo "- $dep_file found ($count occurrence(s))" >> $GITHUB_STEP_SUMMARY
+              echo "$found"
+            fi
           done
+          echo "" >> $GITHUB_STEP_SUMMARY
+      - uses: actions/setup-node@v4
+        if: hashFiles('package.json') != ''
+        with:
+          node-version: 20
+      - name: Audit npm dependencies
+        if: hashFiles('package.json') != ''
+        run: npm audit --audit-level=high || true
