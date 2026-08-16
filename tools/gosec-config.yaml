@@ -1,0 +1,134 @@
+# Gosec Configuration for Cybersecurity Superpowers
+# Gosec (Go Security Checker) inspects Go source code for security problems.
+# This configuration tunes rules and global settings for production scanning.
+# Documentation: https://github.com/securego/gosec
+
+# ============================================================================
+# Global Settings
+# ============================================================================
+# Global severity and confidence thresholds.
+# All rules default to these values unless overridden per-rule.
+global:
+  severity: medium
+  confidence: medium
+  # Exclude rules by ID from all scans.
+  # G104: Unhandled errors — often intentional in Go (deferred close, etc.)
+  exclude:
+    - G104
+
+# ============================================================================
+# Included Rules
+# ============================================================================
+# Explicitly list the rules to include during scanning.
+# Rules are grouped by category for readability.
+include:
+  # === G101 - G113: Hardcoded Secrets and Credentials ===
+  - G101   # Hardcoded credentials
+  - G102   # Hardcoded host keys
+  - G103   # Hardcoded passwords
+  - G104   # Errors unhandled (excluded globally above)
+  - G106   # SSH InsecureIgnoreHostKey
+  - G107   # URL sanitization bypass
+  - G108   # Profiling endpoint exposed (pprof)
+  - G109   # Hardcoded JWT secret
+  - G110   # Hardcoded API key
+  - G111   # Hardcoded SSH key
+  - G112   # Hardcoded password (extended)
+  - G113   # Hardcoded password (configurable)
+
+  # === G201 - G204: SQL and Command Injection ===
+  - G201   # SQL injection via format string
+  - G202   # SQL injection via string concatenation
+  - G203   # Template injection (HTML escaping disabled)
+  - G204   # Subprocess executed with variable (command injection)
+
+  # === G301 - G307: File Permissions and Path ===
+  - G301   # Insecure file permissions (chmod)
+  - G302   # Insecure file permissions (chmod with 0777)
+  - G303   # Insecure temp file creation
+  - G304   # File path provided as user input (path injection)
+  - G305   # File inclusion via variable
+  - G306   # File write with user-controlled permissions
+  - G307   # Deferring unsafe file operation
+
+  # === G401 - G405: Cryptography ===
+  - G401   # Use of weak cryptographic hash (MD5)
+  - G402   # Use of weak cryptographic hash (SHA1)
+  - G403   # Use of weak cryptographic hash (RIPEMD160)
+  - G404   # Use of weak random number generator (math/rand instead of crypto/rand)
+  - G405   # Use of weak TLS configuration
+
+  # === G501 - G507: TLS and SSL ===
+  - G501   # SSL/TLS minimum version too low
+  - G502   # SSL/TLS maximum version too low
+  - G503   # SSL/TLS insecure cipher suites
+  - G504   # SSL/TLS InsecureSkipVerify enabled
+  - G505   # SSL/TLS certificate verification disabled
+  - G506   # SSL/TLS no certificate
+  - G507   # SSL/TLS using deprecated functions
+
+# ============================================================================
+# Scan Settings
+# ============================================================================
+scan:
+  # Number of concurrent workers for scanning.
+  # 0 means auto-detect CPU count. Higher values speed up large projects.
+  concurrency: 8
+
+  # Sort order for output results.
+  # Options: severity (default), filename, line
+  sort: severity
+
+  # Exclude these directories from scanning.
+  exclude-dirs:
+    - tests
+    - test
+    - vendor
+    - .git
+    - .github
+    - node_modules
+    - .venv
+    - venv
+    - examples
+    - _examples
+    - mock
+    - mocks
+    - generated
+
+  # Follow symlinks when scanning directories.
+  follow-symlinks: false
+
+# ============================================================================
+# Nosec and Annotation Settings
+# ============================================================================
+nosec:
+  # Allow "#nosec" annotations to suppress findings.
+  enabled: true
+  # Additional comment patterns that act like "#nosec" (comma-separated).
+  # Useful for project-specific suppression conventions.
+  additional-patterns:
+    - "//gosec:disable"
+
+# ============================================================================
+# Output Settings
+# ============================================================================
+output:
+  # Output format: json, yaml, csv, junit-xml, html, text, sonarqube, golint
+  format: json
+  # Write output to file instead of stdout. Empty string = stdout.
+  file: ""
+  # Verbose output includes detailed explanations.
+  verbose: true
+
+# ============================================================================
+# Audit Mode
+# ============================================================================
+# Audit mode enables all rules, including noisy experimental ones.
+audit: false
+
+# ============================================================================
+# Go Build Tags
+# ============================================================================
+# Tags for conditional compilation (comma-separated).
+# Example: "integration,e2e"
+tags: ""

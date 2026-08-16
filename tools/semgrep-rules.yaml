@@ -1,0 +1,652 @@
+# Semgrep Rules Configuration for Cybersecurity Superpowers
+# This file defines custom security scanning rules for Semgrep static analysis.
+# Each rule includes pattern matching, language targeting, severity levels,
+# and remediation metadata.
+# Documentation: https://semgrep.dev/docs/writing-rules/overview/
+
+rules:
+  # ============================================================================
+  # SQL Injection
+  # ============================================================================
+  - id: sql-injection-python
+    pattern-either:
+      - pattern: |
+          cursor.execute("..." + $USER_INPUT + "...")
+      - pattern: |
+          cursor.execute(f"...{$USER_INPUT}...")
+      - pattern: |
+          $DB.execute("..." + $USER_INPUT + "...")
+      - pattern: |
+          $DB.execute(f"...{$USER_INPUT}...")
+      - pattern: |
+          $DB.query("..." + $USER_INPUT + "...")
+    languages:
+      - python
+    severity: ERROR
+    message: >
+      Detected potential SQL Injection in Python. User input is being
+      concatenated directly into a SQL query string, allowing an attacker to
+      manipulate the query. Use parameterized queries (e.g., `?` or `%s`
+      placeholders with execute()) or an ORM to safely handle input.
+    metadata:
+      cwe: "CWE-89"
+      owasp: "A1:2021 - Injection"
+      category: security
+      technology: python
+      confidence: HIGH
+
+  - id: sql-injection-javascript
+    pattern-either:
+      - pattern: |
+        $DB.query("..." + $USER_INPUT + "...")
+      - pattern: |
+        $DB.query(`...${$USER_INPUT}...`)
+      - pattern: |
+        $CONN.execute("..." + $USER_INPUT + "...")
+      - pattern: |
+        $CONN.execute(`...${$USER_INPUT}...`)
+    languages:
+      - javascript
+      - typescript
+    severity: ERROR
+    message: >
+      Detected potential SQL Injection in JavaScript/TypeScript. User input is
+      being concatenated into a SQL query string. Use parameterized queries
+      (e.g., `?` placeholders) or an ORM (Sequelize, TypeORM, Prisma) instead.
+    metadata:
+      cwe: "CWE-89"
+      owasp: "A1:2021 - Injection"
+      category: security
+      technology: javascript
+      confidence: HIGH
+
+  - id: sql-injection-go
+    pattern-either:
+      - pattern: |
+        db.Query("..." + $USER_INPUT + "...")
+      - pattern: |
+        db.Query(fmt.Sprintf("...", $USER_INPUT))
+      - pattern: |
+        db.Exec("..." + $USER_INPUT + "...")
+      - pattern: |
+        db.Exec(fmt.Sprintf("...", $USER_INPUT))
+      - pattern: |
+        db.QueryRow("..." + $USER_INPUT + "...")
+    languages:
+      - go
+    severity: ERROR
+    message: >
+      Detected potential SQL Injection in Go. User input is being concatenated
+      into a SQL query string. Use parameterized queries with `?` placeholders
+      (e.g., db.Query("SELECT * FROM users WHERE id = ?", id)).
+    metadata:
+      cwe: "CWE-89"
+      owasp: "A1:2021 - Injection"
+      category: security
+      technology: go
+      confidence: HIGH
+
+  - id: sql-injection-java
+    pattern-either:
+      - pattern: |
+        Statement $STMT = $CONN.createStatement();
+        ...
+        $STMT.executeQuery("..." + $USER_INPUT + "...")
+      - pattern: |
+        $CONN.createStatement().executeQuery("..." + $USER_INPUT + "...")
+      - pattern: |
+        $CONN.createStatement().execute("..." + $USER_INPUT + "...")
+      - pattern: |
+        $CONN.createStatement().executeUpdate("..." + $USER_INPUT + "...")
+    languages:
+      - java
+    severity: ERROR
+    message: >
+      Detected potential SQL Injection in Java. User input is being concatenated
+      into a SQL query string using Statement. Use PreparedStatement with
+      parameterized queries to safely handle user input.
+    metadata:
+      cwe: "CWE-89"
+      owasp: "A1:2021 - Injection"
+      category: security
+      technology: java
+      confidence: HIGH
+
+  - id: sql-injection-php
+    pattern-either:
+      - pattern: |
+        mysqli_query($CONN, "..." . $USER_INPUT . "...")
+      - pattern: |
+        $DB->query("..." . $USER_INPUT . "...")
+      - pattern: |
+        $PDO->query("..." . $USER_INPUT . "...")
+      - pattern: |
+        $PDO->exec("..." . $USER_INPUT . "...")
+      - pattern: |
+        mysqli_query($CONN, "...{$USER_INPUT}...")
+    languages:
+      - php
+    severity: ERROR
+    message: >
+      Detected potential SQL Injection in PHP. User input is being concatenated
+      into a SQL query string. Use prepared statements with PDO or MySQLi
+      ($stmt = $pdo->prepare(...); $stmt->execute([...])).
+    metadata:
+      cwe: "CWE-89"
+      owasp: "A1:2021 - Injection"
+      category: security
+      technology: php
+      confidence: HIGH
+
+  # ============================================================================
+  # Cross-Site Scripting (XSS)
+  # ============================================================================
+  - id: reflected-xss-javascript
+    pattern-either:
+      - pattern: |
+        document.write($USER_INPUT)
+      - pattern: |
+        document.writeln($USER_INPUT)
+      - pattern: |
+        $ELEMENT.innerHTML = $USER_INPUT
+      - pattern: |
+        $ELEMENT.outerHTML = $USER_INPUT
+      - pattern: |
+        $ELEMENT.insertAdjacentHTML("...", $USER_INPUT)
+    languages:
+      - javascript
+      - typescript
+    severity: ERROR
+    message: >
+      Reflected XSS detected. User input is being written directly to the DOM
+      via innerHTML, outerHTML, document.write, or insertAdjacentHTML without
+      sanitization. This allows an attacker to inject arbitrary JavaScript.
+      Use textContent, createTextNode, or a sanitization library (DOMPurify).
+    metadata:
+      cwe: "CWE-79"
+      owasp: "A3:2021 - Injection"
+      category: security
+      technology: javascript
+      confidence: HIGH
+
+  - id: stored-xss-javascript
+    pattern-either:
+      - pattern: |
+        $ELEMENT.innerHTML = $STORED_DATA
+      - pattern: |
+        document.write($STORED_DATA)
+      - pattern: |
+        $ELEMENT.outerHTML = $STORED_DATA
+      - pattern: |
+        $ELEMENT.insertAdjacentHTML("...", $STORED_DATA)
+    languages:
+      - javascript
+      - typescript
+    severity: ERROR
+    message: >
+      Stored XSS detected. Data retrieved from storage (database, localStorage,
+      API) is being written to the DOM via innerHTML or similar without
+      sanitization. Stored data may contain malicious scripts from earlier
+      injection. Use textContent or sanitize with DOMPurify before rendering.
+    metadata:
+      cwe: "CWE-79"
+      owasp: "A3:2021 - Injection"
+      category: security
+      technology: javascript
+      confidence: MEDIUM
+
+  - id: react-dangerouslysetinnerhtml
+    pattern: |
+      dangerouslySetInnerHTML={{__html: $DATA}}
+    languages:
+      - javascript
+      - typescript
+    severity: WARNING
+    message: >
+      React dangerouslySetInnerHTML detected. This bypasses React's built-in
+      XSS protection. If user or stored data is rendered this way, it may lead
+      to XSS. Sanitize the HTML content with DOMPurify before using, or prefer
+      safer alternatives like JSX components.
+    metadata:
+      cwe: "CWE-79"
+      owasp: "A3:2021 - Injection"
+      category: security
+      technology: react
+      confidence: MEDIUM
+
+  # ============================================================================
+  # Hardcoded JWT Secrets
+  # ============================================================================
+  - id: hardcoded-jwt-secret
+    pattern-either:
+      - pattern: |
+        jwt.sign($PAYLOAD, "=~/^.{8,}$/")
+      - pattern: |
+        jwt.sign($PAYLOAD, '=~/^.{8,}$/')
+      - pattern: |
+        JWT_SECRET = "=~/^.{8,}$/"
+      - pattern: |
+        jwt_secret = "=~/^.{8,}$/"
+      - pattern: |
+        jwt.decode($TOKEN, "=~/^.{8,}$/")
+      - pattern: |
+        jwt.verify($TOKEN, "=~/^.{8,}$/")
+      - pattern: |
+        jwt.decode($TOKEN, '=~/^.{8,}$/')
+      - pattern: |
+        jwt.verify($TOKEN, '=~/^.{8,}$/')
+    languages:
+      - python
+      - javascript
+      - typescript
+      - go
+      - java
+    severity: ERROR
+    message: >
+      Hardcoded JWT secret detected. JWT signing or verification secrets should
+      never be hardcoded in source code. Store secrets in environment variables,
+      a secrets manager (Vault, AWS Secrets Manager), or encrypted configuration.
+      Hardcoded secrets in source repositories can be exposed to unauthorized
+      parties.
+    metadata:
+      cwe: "CWE-798"
+      owasp: "A7:2021 - Identification and Authentication Failures"
+      category: security
+      confidence: HIGH
+
+  # ============================================================================
+  # Command Injection
+  # ============================================================================
+  - id: command-injection-python-subprocess
+    pattern-either:
+      - pattern: |
+        subprocess.call($CMD + $USER_INPUT, shell=True)
+      - pattern: |
+        subprocess.Popen($CMD + $USER_INPUT, shell=True)
+      - pattern: |
+        subprocess.check_call($CMD + $USER_INPUT, shell=True)
+      - pattern: |
+        subprocess.check_output($CMD + $USER_INPUT, shell=True)
+      - pattern: |
+        os.system($USER_INPUT)
+      - pattern: |
+        os.popen($USER_INPUT)
+      - pattern: |
+        subprocess.call($SHELL_CMD, shell=True)
+      - pattern: |
+        subprocess.Popen($SHELL_CMD, shell=True)
+    languages:
+      - python
+    severity: ERROR
+    message: >
+      Command Injection detected in Python. User-controlled input is being used
+      in a subprocess call with `shell=True` or via os.system/os.popen. This
+      allows an attacker to execute arbitrary OS commands. Use `shlex.quote()`
+      on arguments, avoid `shell=True`, use `subprocess.run` with a list of
+      arguments, or use a safer library.
+    metadata:
+      cwe: "CWE-78"
+      owasp: "A1:2021 - Injection"
+      category: security
+      technology: python
+      confidence: HIGH
+
+  - id: command-injection-go-exec
+    pattern-either:
+      - pattern: |
+        exec.Command("sh", "-c", $CMD + $USER_INPUT)
+      - pattern: |
+        exec.Command("bash", "-c", $CMD + $USER_INPUT)
+      - pattern: |
+        exec.Command("cmd", "/C", $CMD + $USER_INPUT)
+      - pattern: |
+        exec.Command($SHELL_INPUT).CombinedOutput()
+    languages:
+      - go
+    severity: ERROR
+    message: >
+      Command Injection detected in Go. User-controlled input is being passed
+      to exec.Command with a shell interpreter (`sh -c`, `bash -c`). This
+      allows an attacker to inject arbitrary shell commands. Pass arguments
+      as separate strings to exec.Command instead of building a shell string.
+    metadata:
+      cwe: "CWE-78"
+      owasp: "A1:2021 - Injection"
+      category: security
+      technology: go
+      confidence: HIGH
+
+  - id: command-injection-node-child-process
+    pattern-either:
+      - pattern: |
+        child_process.exec($USER_INPUT)
+      - pattern: |
+        require('child_process').exec($USER_INPUT)
+      - pattern: |
+        child_process.execSync($USER_INPUT)
+      - pattern: |
+        require('child_process').execSync($USER_INPUT)
+      - pattern: |
+        child_process.spawn($SHELL, [$USER_INPUT])
+      - pattern: |
+        require('child_process').spawn($SHELL, [$USER_INPUT])
+    languages:
+      - javascript
+      - typescript
+    severity: ERROR
+    message: >
+      Command Injection detected in Node.js. User-controlled input is being
+      passed to child_process.exec or child_process.execSync. These run
+      commands through a shell, enabling arbitrary command injection. Use
+      child_process.execFile or child_process.spawn with argument arrays to
+      avoid shell interpretation.
+    metadata:
+      cwe: "CWE-78"
+      owasp: "A1:2021 - Injection"
+      category: security
+      technology: nodejs
+      confidence: HIGH
+
+  # ============================================================================
+  # Insecure TLS Configuration
+  # ============================================================================
+  - id: insecure-tls-config-go
+    pattern-either:
+      - pattern: |
+        tls.Config{InsecureSkipVerify: true}
+      - pattern: |
+        &tls.Config{InsecureSkipVerify: true}
+      - pattern: |
+        tls.Config{...MinVersion: tls.VersionTLS10}
+      - pattern: |
+        tls.Config{...MinVersion: tls.VersionTLS11}
+      - pattern: |
+        tls.Config{...MaxVersion: tls.VersionTLS10}
+      - pattern: |
+        tls.Config{...MaxVersion: tls.VersionTLS11}
+    languages:
+      - go
+    severity: ERROR
+    message: >
+      Insecure TLS configuration detected in Go. InsecureSkipVerify is set to
+      true, which disables certificate verification and enables MITM attacks.
+      Also, TLS versions below 1.2 (TLS 1.0, 1.1) are deprecated and insecure.
+      Use MinVersion: tls.VersionTLS12 and never set InsecureSkipVerify: true
+      in production code.
+    metadata:
+      cwe: "CWE-295"
+      owasp: "A7:2021 - Identification and Authentication Failures"
+      category: security
+      technology: go
+      confidence: HIGH
+
+  - id: insecure-tls-config-python
+    pattern-either:
+      - pattern: |
+        ssl.wrap_socket($SOCKET, cert_reqs=ssl.CERT_NONE)
+      - pattern: |
+        ssl.wrap_socket($SOCKET, ssl_version=ssl.PROTOCOL_TLSv1)
+      - pattern: |
+        ssl.wrap_socket($SOCKET, ssl_version=ssl.PROTOCOL_TLSv1_1)
+      - pattern: |
+        ssl._create_unverified_context()
+      - pattern: |
+        ssl._create_default_https_context = ssl._create_unverified_context
+      - pattern: |
+        requests.packages.urllib3.disable_warnings()
+      - pattern: |
+        verify=False
+    languages:
+      - python
+    severity: ERROR
+    message: >
+      Insecure TLS/SSL configuration detected in Python. Certificate verification
+      is disabled (CERT_NONE), an insecure SSL version is used, or warnings are
+      suppressed. This allows MITM attacks. Use ssl.create_default_context()
+      and enable cert_reqs=ssl.CERT_REQUIRED. Set verify=True for requests.
+    metadata:
+      cwe: "CWE-295"
+      owasp: "A7:2021 - Identification and Authentication Failures"
+      category: security
+      technology: python
+      confidence: HIGH
+
+  # ============================================================================
+  # NoSQL Injection (MongoDB)
+  # ============================================================================
+  - id: nosql-injection-mongodb
+    pattern-either:
+      - pattern: |
+        $DB.collection($NAME).find({$KEY: $USER_INPUT})
+      - pattern: |
+        $DB.collection($NAME).findOne({$KEY: $USER_INPUT})
+      - pattern: |
+        $DB.collection($NAME).updateOne({$KEY: $USER_INPUT}, ...)
+      - pattern: |
+        $DB.collection($NAME).deleteOne({$KEY: $USER_INPUT})
+      - pattern: |
+        $DB[$NAME]->find([$KEY => $USER_INPUT])
+      - pattern: |
+        $COLLECTION.find({$KEY: {$regex: $USER_INPUT}})
+    languages:
+      - javascript
+      - typescript
+      - php
+    severity: ERROR
+    message: >
+      NoSQL Injection detected in MongoDB query. User input is being passed
+      directly into query filters without sanitization. Attackers can inject
+      MongoDB query operators ($ne, $gt, $regex, $where) to bypass
+      authentication or extract data. Use a schema validation library (Joi,
+      express-validator, Zod) to sanitize and validate user input before
+      constructing database queries.
+    metadata:
+      cwe: "CWE-943"
+      owasp: "A1:2021 - Injection"
+      category: security
+      technology: mongodb
+      confidence: HIGH
+
+  # ============================================================================
+  # Path Traversal
+  # ============================================================================
+  - id: path-traversal
+    pattern-either:
+      - pattern: |
+        open($BASE_PATH + $USER_INPUT, ...)
+      - pattern: |
+        open(f"{$BASE_PATH}{$USER_INPUT}", ...)
+      - pattern: |
+        Path($BASE_PATH) / $USER_INPUT
+      - pattern: |
+        os.path.join($BASE_PATH, $USER_INPUT)
+      - pattern: |
+        fs.readFileSync($BASE_PATH + $USER_INPUT)
+      - pattern: |
+        fs.readFile($BASE_PATH + $USER_INPUT, ...)
+      - pattern: |
+        ioutil.ReadFile($BASE_PATH + $USER_INPUT)
+      - pattern: |
+        os.Open($BASE_PATH + $USER_INPUT)
+      - pattern: |
+        file_get_contents($BASE_PATH . $USER_INPUT)
+      - pattern: |
+        new java.io.File($BASE_PATH + $USER_INPUT)
+      - pattern: |
+        Paths.get($BASE_PATH, $USER_INPUT)
+    languages:
+      - python
+      - javascript
+      - typescript
+      - go
+      - php
+      - java
+    severity: WARNING
+    message: >
+      Path Traversal vulnerability detected. User-controlled input is being used
+      in file path construction without sanitization. An attacker may use ".."
+      sequences to read arbitrary files on the system. Sanitize the input by
+      rejecting paths containing ".." or "/", use path basename only, or use a
+      chroot/jail mechanism.
+    metadata:
+      cwe: "CWE-22"
+      owasp: "A1:2021 - Injection"
+      category: security
+      confidence: MEDIUM
+
+  # ============================================================================
+  # Insecure Deserialization
+  # ============================================================================
+  - id: insecure-deserialization-python-pickle
+    pattern-either:
+      - pattern: |
+        pickle.load($USER_INPUT)
+      - pattern: |
+        pickle.loads($USER_INPUT)
+      - pattern: |
+        cPickle.load($USER_INPUT)
+      - pattern: |
+        cPickle.loads($USER_INPUT)
+      - pattern: |
+        shelve.open(...)
+      - pattern: |
+        yaml.load($USER_INPUT)
+      - pattern: |
+        yaml.load($USER_INPUT, Loader=yaml.Loader)
+    languages:
+      - python
+    severity: ERROR
+    message: >
+      Insecure deserialization detected in Python. pickle/cPickle/shelve and
+      unsafe yaml.load() can execute arbitrary code during deserialization.
+      Never deserialize untrusted data. Use a safe serialization format like
+      JSON, or if YAML is required, use yaml.safe_load().
+    metadata:
+      cwe: "CWE-502"
+      owasp: "A8:2021 - Software and Data Integrity Failures"
+      category: security
+      technology: python
+      confidence: HIGH
+
+  - id: insecure-deserialization-js
+    pattern-either:
+      - pattern: |
+        JSON.parse($USER_INPUT)
+      - pattern: |
+        eval("(" + $USER_INPUT + ")")
+      - pattern: |
+        new Function("return " + $USER_INPUT)
+    languages:
+      - javascript
+      - typescript
+    severity: WARNING
+    message: >
+      Potentially insecure deserialization detected in JavaScript. Using eval()
+      or new Function() on user input can lead to code injection.
+      JSON.parse() is generally safe for valid JSON, but validate input
+      structure and schema before trusting deserialized data.
+    metadata:
+      cwe: "CWE-502"
+      owasp: "A8:2021 - Software and Data Integrity Failures"
+      category: security
+      technology: javascript
+      confidence: MEDIUM
+
+  - id: insecure-deserialization-java
+    pattern-either:
+      - pattern: |
+        new ObjectInputStream($INPUT).readObject()
+      - pattern: |
+        ObjectInputStream $OIS = new ObjectInputStream($INPUT);
+        ...
+        $OIS.readObject()
+      - pattern: |
+        new java.io.ObjectInputStream($INPUT).readObject()
+    languages:
+      - java
+    severity: ERROR
+    message: >
+      Insecure deserialization detected in Java. ObjectInputStream.readObject()
+      can execute arbitrary code during deserialization. Never deserialize
+      untrusted data. Use a safe serialization format (JSON, Protobuf) with
+      strict schema validation, or implement a deserialization whitelist filter.
+    metadata:
+      cwe: "CWE-502"
+      owasp: "A8:2021 - Software and Data Integrity Failures"
+      category: security
+      technology: java
+      confidence: HIGH
+
+  # ============================================================================
+  # Hardcoded API Keys and Passwords
+  # ============================================================================
+  - id: hardcoded-api-key
+    pattern-either:
+      - pattern: |
+        API_KEY = "=~/^[A-Za-z0-9_-]{16,}$/"
+      - pattern: |
+        api_key = "=~/^[A-Za-z0-9_-]{16,}$/"
+      - pattern: |
+        apiKey = "=~/^[A-Za-z0-9_-]{16,}$/"
+      - pattern: |
+        API_KEY = '=~/^[A-Za-z0-9_-]{16,}$/'
+      - pattern: |
+        api_key = '=~/^[A-Za-z0-9_-]{16,}$/'
+      - pattern: |
+        apiKey = '=~/^[A-Za-z0-9_-]{16,}$/'
+    languages:
+      - python
+      - javascript
+      - typescript
+      - go
+      - java
+      - php
+      - ruby
+    severity: ERROR
+    message: >
+      Hardcoded API key detected. API keys should never be hardcoded in source
+      code. Store them in environment variables, a secrets manager, or encrypted
+      configuration files that are excluded from version control.
+    metadata:
+      cwe: "CWE-798"
+      owasp: "A7:2021 - Identification and Authentication Failures"
+      category: security
+      confidence: MEDIUM
+
+  - id: hardcoded-password
+    pattern-either:
+      - pattern: |
+        password = "=~/^.{6,}$/"
+      - pattern: |
+        PASSWORD = "=~/^.{6,}$/"
+      - pattern: |
+        passwd = "=~/^.{6,}$/"
+      - pattern: |
+        password = '=~/^.{6,}$/'
+      - pattern: |
+        PASSWORD = '=~/^.{6,}$/'
+      - pattern: |
+        passwd = '=~/^.{6,}$/'
+      - pattern: |
+        db_password = "=~/^.{6,}$/"
+      - pattern: |
+        pwd = "=~/^.{6,}$/"
+    languages:
+      - python
+      - javascript
+      - typescript
+      - go
+      - java
+      - php
+      - ruby
+      - rust
+    severity: ERROR
+    message: >
+      Hardcoded password detected. Passwords should never be hardcoded in source
+      code. Use environment variables, a secrets manager, or prompting for
+      credentials at runtime.
+    metadata:
+      cwe: "CWE-798"
+      owasp: "A7:2021 - Identification and Authentication Failures"
+      category: security
+      confidence: MEDIUM
