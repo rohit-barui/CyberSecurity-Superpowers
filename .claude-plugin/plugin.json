@@ -1,0 +1,26 @@
+{
+  "name": "CyberSecurity Superpowers",
+  "description": "A curated set of Claude agent skills for cybersecurity operations including secure coding, static analysis, incident response, compliance auditing, and threat intelligence.",
+  "version": "0.1.0",
+  "author": "rohit-barui",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rohit-barui/cybersecurity-superpowers"
+  },
+  "capabilities": {
+    "skills": [
+      "secure-coding",
+      "static-analysis",
+      "incident-response",
+      "compliance-audit",
+      "threat-intelligence"
+    ],
+    "tools": true
+  },
+  "configuration": {
+    "claude_code": {
+      "auto_attach": true,
+      "skill_discovery": "directory-based"
+    }
+  }
+}
