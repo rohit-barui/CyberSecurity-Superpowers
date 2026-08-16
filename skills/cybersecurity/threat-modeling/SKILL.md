@@ -7,6 +7,15 @@ description: "Generates a STRIDE-based threat model, assigns CVSS scores, and re
 
 This skill helps you create a threat model for your project using the STRIDE methodology, assign CVSS scores to identified threats, and recommend mitigations based on OWASP and NIST guidelines.
 
+## Why Use This Skill
+
+Threat modeling is the single most effective technique to catch critical architectural security flaws **before a single line of code is written**. Fixing a security flaw during the design phase is up to 100x cheaper than remediating a breach in production.
+
+- 🛡️ **Proactive Risk Reduction**: Maps trust boundaries, data flows, and potential entry points before implementation.
+- 📊 **Objective CVSS v3.1 Scoring**: Quantifies risks scientifically so development teams prioritize high-severity threats first.
+- 🏆 **Industry Standard Alignment**: Automatically maps mitigations directly to **OWASP ASVS** and **NIST SP 800-53** security controls.
+- 🤖 **Agentic Security Integration**: Gives AI agents explicit architectural context to make security-conscious code design decisions.
+
 ## When to Use
 
 You MUST use this skill during the design phase, after brainstorming and before writing implementation plans, to ensure security is considered early in the development lifecycle.

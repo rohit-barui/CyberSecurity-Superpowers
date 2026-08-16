@@ -9,6 +9,15 @@ description: "Generates SBOMs in SPDX and CycloneDX formats, performs dependency
 
 Generate Software Bill of Materials (SBOM) in SPDX and CycloneDX formats, perform dependency vulnerability scanning, and detect supply-chain attacks.
 
+## Why Use This Skill
+
+Modern software is built on thousands of open-source dependencies. Attackers increasingly target the software supply chain through dependency confusion, typosquatting, and malicious package updates.
+
+- 📦 **Open Standards Compliance**: Generates industry-standard **CycloneDX 1.4** and **SPDX 2.3** SBOMs required by US Executive Order 14028.
+- 🛡️ **Supply-Chain Threat Detection**: Identifies malicious dependencies, typosquatting, and license compliance violations.
+- 🔄 **Automated Vulnerability Cross-Referencing**: Matches dependencies against NVD, OSV, and GitHub Security Advisories.
+- 🛠️ **Clear Remediation Roadmaps**: Recommends exact dependency upgrades, patches, or safe replacements.
+
 Capabilities:
 - **SBOM Generation**: Produce SPDX 2.3 and CycloneDX 1.4 compliant SBOMs
 - **Dependency Scanning**: Cross-reference dependencies against known vulnerability databases (NVD, OSV, GitHub Advisory)

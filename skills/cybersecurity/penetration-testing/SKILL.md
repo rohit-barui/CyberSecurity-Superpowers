@@ -7,6 +7,15 @@ description: "Produces a scoped red-team plan linked to MITRE ATT&CK and OWASP W
 
 This skill helps you create a scoped red-team penetration testing plan for your application, linking test cases to the MITRE ATT&CK framework and the OWASP Web Security Testing Guide (WSTG).
 
+## Why Use This Skill
+
+Defensive security controls must be tested against real-world offensive tactics. Penetration testing simulates adversarial attacks to identify exploitable attack paths before malicious actors do.
+
+- ⚔️ **Offensive Framework Alignment**: Maps every test case directly to **MITRE ATT&CK** tactics and **OWASP WSTG** guidelines.
+- 🎯 **Scoped & Rigorous Plans**: Generates structured Rules of Engagement, scope definitions, and step-by-step test execution steps.
+- 🛡️ **Red-Team & Dev Team Bridge**: Gives ethical hackers and developers a clear, shared roadmap for security validation.
+- 📜 **Compliance-Ready Documentation**: Produces `pentest-plan.md` needed for SOC 2, ISO 27001, and PCI-DSS audits.
+
 ## When to Use
 
 You MUST use this skill after a release or on demand (e.g., before a major release, after significant changes, or when required by compliance) to validate the security of your application through simulated attacks.

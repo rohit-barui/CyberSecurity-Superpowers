@@ -7,6 +7,15 @@ description: "Generates a NIST-aligned incident-response playbook with checklist
 
 This skill helps you create an incident response playbook aligned with NIST SP 800-61 (Computer Security Incident Handling Guide). It provides checklists, communication templates, and lessons-learned documentation to handle security incidents effectively.
 
+## Why Use This Skill
+
+When a security incident occurs, every minute counts. Chaos and panic during a breach cause delayed containment, regulatory fines, and reputational damage.
+
+- 🚨 **NIST SP 800-61 Alignment**: Structured playbooks covering Preparation, Detection, Containment, Eradication, Recovery, and Post-Incident phases.
+- 📋 **Pre-Drafted Communication Templates**: Ready-to-use templates for internal alerts, customer notices, and regulatory filings.
+- 👥 **RACI Matrix & Roles**: Defines explicit responsibilities for Incident Managers, Tech Leads, Legal Counsel, and Communications.
+- 🔎 **Evidence Preservation**: Comprehensive guidelines for memory dumps, disk forensics, and chain of custody.
+
 ## When to Use
 
 You MUST use this skill when a security vulnerability is confirmed or suspected, or after a penetration test reveals exploitable issues, to prepare a structured response.

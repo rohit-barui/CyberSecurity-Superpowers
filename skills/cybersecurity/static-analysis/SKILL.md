@@ -7,6 +7,15 @@ description: "Executes appropriate audit tools (`npm audit`, `bandit`, `gosec`, 
 
 This skill helps you perform static analysis security testing (SAST) and dependency scanning on your project, then generates a report with remediation steps.
 
+## Why Use This Skill
+
+Manual code reviews frequently miss subtle security bugs and vulnerable third-party packages. Static analysis automates vulnerability detection across source code and dependencies.
+
+- 🔍 **Multi-Engine SAST Integration**: Runs industry-leading analyzers including `Semgrep`, `Bandit`, `Gosec`, and `npm audit`.
+- ⚡ **Early Vulnerability Detection**: Catches hardcoded secrets, unsafe queries, and vulnerable packages before code reaches production.
+- 📊 **Standardized SARIF & Markdown Reports**: Consolidates multi-tool outputs into a single, unified `SECURITY_SCAN.md` and SARIF file.
+- 🛠️ **Actionable Remediation Plans**: Provides exact file locations, severity levels, and copy-paste remediation steps.
+
 ## When to Use
 
 You MUST use this skill during the implementation phase, after code changes are made but before requesting code review, to catch security vulnerabilities early.

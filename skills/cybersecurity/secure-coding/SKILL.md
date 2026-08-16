@@ -5,7 +5,16 @@ description: "Applies language-specific OWASP secure-coding checklists, runs lin
 
 # Secure Coding Skill
 
-This skill helps you write secure code by applying language-specific OWASP secure coding checklists, running linting, and producing a SECURITY.md checklist.
+This skill helps you write secure code by applying language-specific OWASP secure coding checklists, running linting, and producing a `SECURITY.md` checklist.
+
+## Why Use This Skill
+
+Writing functional code is not enough — modern applications must be resilient against SQL injections, cross-site scripting (XSS), insecure deserialization, and authentication bypasses.
+
+- ⚡ **Language-Specific Guidance**: Tailored security checklists for JavaScript, TypeScript, Python, Go, and Rust.
+- 🚫 **Prevent Common Pitfalls**: Automatically enforces OWASP Top 10 guidelines directly during the coding phase.
+- 📜 **Audit Trail & Documentation**: Generates a version-controlled `SECURITY.md` checklist summarizing verified security controls.
+- 🔄 **IDE & Agent Synergy**: Enables AI agents to audit code line-by-line before submitting pull requests.
 
 ## When to Use
 
