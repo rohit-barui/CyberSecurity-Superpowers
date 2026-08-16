@@ -1,0 +1,13 @@
+{
+  "name": "cybersec-demo",
+  "version": "1.0.0",
+  "description": "Demo project with intentional vulnerabilities for CyberSecurity Superpowers",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "*",
+    "body-parser": "*"
+  }
+}
