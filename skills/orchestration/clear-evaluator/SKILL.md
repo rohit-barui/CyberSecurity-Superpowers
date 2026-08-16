@@ -1,8 +1,22 @@
+---
+name: clear-evaluator
+description: "Evaluates project readiness across Context, Logic, Execution, Accuracy, and Relevance metrics."
+---
+
 # CLEAR Evaluator Skill
 
 ## Purpose
 
 The CLEAR Evaluator provides a self-evaluation mechanism for the Cybersecurity Superpowers project using the **CLEAR** metrics framework from the **ACE** (Agent Capability Evaluation) methodology. It assesses project readiness across five dimensions and generates structured reports.
+
+## Why Use This Skill
+
+Self-evaluation is essential for autonomous agent workflows to guarantee quality and release readiness before deployment.
+
+- 📊 **Quantifiable Readiness**: Evaluates project readiness on a 50-point scale across Context, Logic, Execution, Accuracy, and Relevance.
+- ⚡ **Automated Diagnostics**: Scans project structure, scripts, and documentation automatically.
+- 🏆 **ACE Framework Alignment**: Based on industry-leading Agent Capability Evaluation methodologies.
+- 📜 **Continuous Improvement**: Provides concrete scoring rationale and action items for quality gaps.
 
 ## Metrics
 
