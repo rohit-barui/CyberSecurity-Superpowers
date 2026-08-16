@@ -1,0 +1,76 @@
+# Cybersecurity Superpowers — Loom Demo Script
+
+**Duration**: 2-3 minutes
+**Presenter**: Project maintainer / contributor
+**Target Audience**: Developers, security engineers, DevSecOps teams
+
+---
+
+## [0:00 - 0:20] Intro
+
+"Hi everyone! Today I'm excited to walk you through Cybersecurity Superpowers — an open-source collection of agent skills designed to bring cybersecurity expertise directly into your development workflow.
+
+Whether you're using OpenCode, Claude Code, or just bash, this project gives you immediate access to best-practice security tooling."
+
+---
+
+## [0:20 - 0:45] What It Is
+
+"This project packages five core cybersecurity skills into a single, composable pipeline:
+
+- Secure-coding checklists for multiple languages
+- Static analysis with SARIF and JSON output
+- Incident response playbooks and runbooks
+- Compliance auditing across major frameworks
+- Threat intelligence with STIX/TAXII integration
+
+Each skill is a self-contained directory with a SKILL.md, run scripts, and configuration files."
+
+---
+
+## [0:45 - 1:30] Demo Walkthrough — Single Skill
+
+"Let me show you how it works. I'll navigate to the project directory and run the secure-coding skill against a sample Python file:
+
+```
+cd cybersecurity-superpowers
+bash skills/secure-coding/run.sh demo/secure-coding/sample.py
+```
+
+You can see it checks for common vulnerabilities — SQL injection patterns, hardcoded credentials, insecure deserialization — and provides actionable remediation advice."
+
+---
+
+## [1:30 - 2:00] Demo Walkthrough — Orchestrator
+
+"Now let's run the full orchestrator, which chains all five skills together:
+
+```
+bash skills/orchestration/run.sh --target demo/ --output artifacts/reports/
+```
+
+The orchestrator runs each skill sequentially, passing artifacts between stages, and produces a consolidated security report. This is perfect for CI/CD pipelines or pre-release security gates."
+
+---
+
+## [2:00 - 2:30] Outro
+
+"The project is fully open source under the MIT license. We have good first issues tagged for new contributors, comprehensive documentation, and community-driven development.
+
+If you find this useful, please:
+
+- Star the repository on GitHub
+- Check out the contributing guide
+- Join the community discussions
+
+Secure development shouldn't be hard. With Cybersecurity Superpowers, it just got a whole lot easier.
+
+Thanks for watching!"
+
+---
+
+## End Screen Text
+
+**GitHub**: https://github.com/rohit-barui/cybersecurity-superpowers
+**License**: MIT
+**Tags**: #Cybersecurity #DevSecOps #OpenSource
