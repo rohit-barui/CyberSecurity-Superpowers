@@ -1,0 +1,251 @@
+# Bandit Configuration for Cybersecurity Superpowers
+# Bandit is a security linter for Python source code.
+# This configuration extends defaults to cover all relevant test categories.
+# Documentation: https://bandit.readthedocs.io/en/latest/config.html
+
+# ============================================================================
+# Plugin Settings
+# ============================================================================
+plugins:
+  # === B101 - B110: Basic Assertions and General Errors ===
+  B101:
+    # assert statements used (can mask production errors)
+    enabled: true
+  B102:
+    # exec used
+    enabled: true
+  B103:
+    # set_bad_file_permissions (setuid/setgid bits)
+    enabled: true
+  B104:
+    # hardcoded password strings
+    enabled: true
+  B105:
+    # hardcoded password strings (extended)
+    enabled: true
+  B106:
+    # hardcoded password strings (configurable)
+    enabled: true
+  B107:
+    # hardcoded password strings (Generic)
+    enabled: true
+  B108:
+    # hardcoded tmp directory (insecure temp file usage)
+    enabled: true
+  B110:
+    # try/except/pass detected (pass silently in except)
+    enabled: true
+
+  # === B201 - B210: Flask, Request, and HTTP ===
+  B201:
+    # flask debug mode
+    enabled: true
+  B202:
+    # tarfile.extractall (zip slip)
+    enabled: true
+  B203:
+    # xml.etree.cElementTree (XPath injection)
+    enabled: false  # Low signal-to-noise ratio
+  B204:
+    # lxml (XML external entity expansion)
+    enabled: true
+  B205:
+    # xml.sax (XML external entity expansion)
+    enabled: true
+  B206:
+    # xml.dom (XML external entity expansion)
+    enabled: true
+  B207:
+    # xml.parsers.expat (XML external entity expansion)
+    enabled: true
+  B208:
+    # xml.etree.ElementTree (XML external entity expansion)
+    enabled: true
+  B209:
+    # https connection verify disabled
+    enabled: true
+  B210:
+    # server-side request forgery (SSRF)
+    enabled: true
+
+  # === B301 - B310: Pickle, Shell, and Subprocess ===
+  B301:
+    # pickle usage (insecure deserialization)
+    enabled: true
+  B302:
+    # marshal usage
+    enabled: true
+  B303:
+    # md5 hash (insecure hash)
+    enabled: true
+  B304:
+    # ciphers (ciphers without authentication)
+    enabled: true
+  B305:
+    # cipher modes (ECB mode)
+    enabled: true
+  B306:
+    # mktemp (predictable temp file names)
+    enabled: true
+  B307:
+    # eval usage
+    enabled: true
+  B308:
+    # mark_safe usage (Django XSS)
+    enabled: true
+  B309:
+    # ciphers and modes
+    enabled: true
+  B310:
+    # subprocess with shell=True (command injection)
+    enabled: true
+
+  # === B401 - B410: Import and Crypto ===
+  B401:
+    # import xml.etree (XPath injection)
+    enabled: true
+  B402:
+    # import xml.sax
+    enabled: true
+  B403:
+    # import xml.dom
+    enabled: true
+  B404:
+    # import subprocess (consider security implications)
+    enabled: true
+  B405:
+    # import xml.parsers.expat
+    enabled: true
+  B406:
+    # import xml.etree.ElementTree
+    enabled: true
+  B407:
+    # import lxml.etree
+    enabled: true
+  B408:
+    # import pickle
+    enabled: true
+  B409:
+    # import cPickle
+    enabled: true
+  B410:
+    # import marshal
+    enabled: true
+
+  # === B501 - B510: Crypto ===
+  B501:
+    # pycrypto / pycryptodome with weak keys
+    enabled: true
+  B502:
+    # ssl with bad version
+    enabled: true
+  B503:
+    # ssl with bad defaults
+    enabled: true
+
+  # === B601 - B610: Web and Framework ===
+  B601:
+    # paramiko (shell injection)
+    enabled: true
+  B602:
+    # Jinja2 template injection (autoescape false)
+    enabled: true
+  B603:
+    # sql injection
+    enabled: true
+  B604:
+    # sql injection (raw SQL)
+    enabled: true
+  B605:
+    # sql injection (string formatting)
+    enabled: true
+  B606:
+    # sql injection (string concatenation)
+    enabled: true
+  B607:
+    # sql injection (string concatenation with vars)
+    enabled: true
+  B608:
+    # sql injection (join)
+    enabled: true
+  B609:
+    # linux commands (shell injection)
+    enabled: true
+  B610:
+    # django set_raw_queryset
+    enabled: true
+
+  # === B701 - B710: Additional Checks ===
+  B701:
+    # yaml.load (insecure deserialization)
+    enabled: true
+  B702:
+    # use of input() in Python 2
+    enabled: true
+
+# ============================================================================
+# Skips: Tests to exclude (low signal-to-noise ratio or project-specific)
+# ============================================================================
+skips:
+  - B101   # assert used — acceptable in test code and debug paths
+  - B311   # random — not a security issue in most non-crypto contexts
+  - B324   # hashlib — over-sensitive for non-security hash usage
+  - B404   # subprocess import only — B310 handles actual injection
+
+# ============================================================================
+# Excluded Directories
+# ============================================================================
+exclude_dirs:
+  - tests/
+  - test/
+  - .venv/
+  - venv/
+  - __pycache__/
+  - node_modules/
+  - .git/
+  - .github/
+  - .eggs/
+  - *.egg-info/
+  - dist/
+  - build/
+  - .tox/
+  - .mypy_cache/
+  - .pytest_cache/
+
+# ============================================================================
+# Target Configuration
+# ============================================================================
+# Recursively scan all .py files in the project
+targets:
+  - .
+
+# ============================================================================
+# Output Formatting
+# ============================================================================
+# Format options: screen, json, csv, html, xml, custom
+format: screen
+
+# ============================================================================
+# Profile Selection
+# ============================================================================
+# 'all' runs all built-in tests. Custom profiles can target specific subsets.
+profile: all
+
+# ============================================================================
+# Severity and Confidence Thresholds
+# ============================================================================
+# Only show results at or above these levels
+# Levels: LOW, MEDIUM, HIGH
+severity: LOW
+confidence: LOW
+
+# ============================================================================
+# Number of workers for parallel scanning
+# ============================================================================
+# Set to 0 to auto-detect CPU count
+jobs: 0
+
+# ============================================================================
+# Message template for custom output
+# ============================================================================
+message_template: "{filename}:{line_number}: {test_id}({severity}): {message}"

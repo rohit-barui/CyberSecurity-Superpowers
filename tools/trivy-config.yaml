@@ -1,0 +1,300 @@
+# Trivy Configuration for Cybersecurity Superpowers
+# Trivy is a comprehensive vulnerability and misconfiguration scanner.
+# This configuration covers container images, filesystems, and repositories.
+# Documentation: https://trivy.dev/docs/
+
+# ============================================================================
+# Global Settings
+# ============================================================================
+
+# Severity filter: only report findings at or above these levels.
+# Order matters: CRITICAL > HIGH > MEDIUM > LOW > UNKNOWN
+severity:
+  - CRITICAL
+  - HIGH
+  - MEDIUM
+
+# Scanners to enable during analysis.
+# vuln:      Vulnerability scanning (CVEs)
+# secret:    Hardcoded secrets detection
+# misconfig: Infrastructure misconfiguration scanning (IaC)
+scanners:
+  - vuln
+  - secret
+  - misconfig
+
+# ============================================================================
+# Output Settings
+# ============================================================================
+
+# Default output format.
+# Supported: table, json, sarif, template, cyclonedx, spdx, spdx-json, github
+format: table
+
+# Output file path. Empty string means stdout.
+# When "json" or "sarif" format is used, redirect to a file for CI pipeline use.
+# Examples:
+#   format: json      -> output: results.json
+#   format: sarif     -> output: results.sarif
+#   format: table     -> output: "" (stdout)
+output: ""
+
+# Template for custom output format (used when format: template).
+# Path to a Go template file. Example usage:
+#   format: template
+#   template: "@contrib/trivy.tpl"
+template: ""
+
+# ============================================================================
+# Scan Settings
+# ============================================================================
+scan:
+  # Package types to include in vulnerability scanning.
+  # os:     OS distribution packages (apt, yum, apk, etc.)
+  # library: Language-specific packages (npm, pip, go, gem, etc.)
+  package-types:
+    - os
+    - library
+
+  # Directories or files to skip during scanning.
+  # Supports glob patterns.
+  skip-dirs:
+    - test/
+    - tests/
+    - vendor/
+    - .git/
+    - node_modules/
+    - .venv/
+    - venv/
+    - __pycache__/
+    - .eggs/
+    - *.egg-info/
+    - dist/
+    - build/
+    - .mypy_cache/
+    - .pytest_cache/
+    - .tox/
+    - .github/
+    - examples/
+    - _examples/
+    - mock/
+    - mocks/
+    - generated/
+    - fixtures/
+    - fixture/
+
+  # Specific files to skip.
+  skip-files:
+    - "*.min.js"
+    - "*.map"
+    - package-lock.json  # Often scanned via npm audit; exclude to reduce noise
+    - yarn.lock
+    - go.sum
+
+  # Offline scan mode.
+  # When true, does not fetch vulnerability database updates.
+  offline: false
+
+  # Scan timeout duration (Go duration format).
+  # Scans exceeding this timeout will fail.
+  timeout: "10m"
+
+  # Number of concurrent scans.
+  # 0 means auto-detect. Increase for faster scanning of multiple targets.
+  concurrency: 4
+
+  # Re-scan only if the database is older than this duration.
+  # Set to empty string to always update.
+  db-repository: "ghcr.io/aquasecurity/trivy-db:2"
+  db-no-progress: false
+
+  # Include dev dependencies in scans.
+  # When false, devDependencies (npm, pip, etc.) are excluded.
+  include-dev-deps: true
+
+  # Include all packages (including those not used in production).
+  include-unused: false
+
+# ============================================================================
+# Vulnerability Settings
+# ============================================================================
+vulnerability:
+  # Ignore vulnerabilities that do not have a fix version available.
+  # Some teams prefer to only track fixable issues.
+  ignore-unfixed: false
+
+  # Only report vulnerabilities with CVSS score >= this threshold.
+  # Range: 0.0 - 10.0
+  # Commented out — severity filter is preferred.
+  # cvss-score-threshold: 7.0
+
+  # Report only vulnerabilities that are NOT suppressed by the listed sources.
+  # Sources: unknown, nvd, redhat, debian, ubuntu, archlinux, alpine, amazon,
+  #          oracle, suse, photon, chainguard, wolfi, bitnami
+  source: []
+
+# ============================================================================
+# Secret Detection Settings
+# ============================================================================
+secret:
+  # Allow rules by ID (override global severity filter).
+  # Only show secrets with severity matching the global severity level.
+  allow-rules: []
+
+  # Path to an optional custom secrets config (TOML format).
+  # Extends or overrides the built-in rules.
+  config-path: ""
+
+  # Exclude rules by ID from secret scanning.
+  # Example: exclude-id = ["aws-secret-key", "github-pat"]
+  exclude-rules: []
+
+# ============================================================================
+# Misconfiguration Settings
+# ============================================================================
+misconfiguration:
+  # Include only checks from these categories.
+  # Categories: armada, aws, azure, cloudformation, docker, kubernetes,
+  #             terraform, terraformplan, ansible, helm
+  # Empty list means all categories are included.
+  include-categories: []
+
+  # Exclude specific misconfiguration checks by ID.
+  # Example: exclude-checks = ["KSV001", "DS001"]
+  exclude-checks: []
+
+  # Terraform variables file path (for variable resolution in IaC scans).
+  tf-vars: []
+
+  # Enable IaC scanning for all supported formats.
+  scan-iac: true
+
+# ============================================================================
+# Cache Settings
+# ============================================================================
+cache:
+  # Cache backend: root, fs, or memory
+  # root:  Use filesystem with Trivy's own directory structure
+  # fs:    Use a custom directory
+  # memory: In-memory cache (not persistent)
+  backend: "root"
+
+  # Custom cache directory (used when backend is "fs").
+  # Default: ~/.cache/trivy or /tmp/trivy/.cache
+  dir: ""
+
+  # Cache TTL (time-to-live) before entries are refreshed.
+  ttl: "24h"
+
+  # Clear the image cache before scanning.
+  # Useful in CI to ensure fresh scans.
+  clear: false
+
+# ============================================================================
+# Registry and Authentication
+# ============================================================================
+registry:
+  # Insecure registries (HTTPS with self-signed or untrusted certs).
+  # Use only for internal/development registries.
+  insecure: []
+
+  # Non-TLS registries (plain HTTP).
+  non-tls: []
+
+  # Mirror configuration for registry URLs.
+  # Format: source = "destination"
+  mirrors: {}
+
+  # Authentication credentials for private registries.
+  # Format: URL = "username:password"
+  # Use environment variables or CI secrets instead of hardcoding.
+  auth: {}
+
+# ============================================================================
+# Image Scanning
+# ============================================================================
+image:
+  # Remove image from local Docker daemon after scanning.
+  remove: false
+
+  # Download the image even if it already exists locally.
+  download: true
+
+  # Do not use the Docker daemon to scan. Only use registry.
+  no-daemon: false
+
+# ============================================================================
+# Filesystem Scanning
+# ============================================================================
+filesystem:
+  # Root directory for filesystem scanning.
+  # Default is current directory.
+  path: "."
+
+# ============================================================================
+# Git Repository Scanning
+# ============================================================================
+repo:
+  # Branch to scan. Default is the default branch.
+  branch: ""
+
+  # Commit hash to scan. Scans a specific commit instead of HEAD.
+  commit: ""
+
+  # Include only these file patterns in the scan.
+  include-paths: []
+
+  # Exclude these file patterns from the scan.
+  exclude-paths: []
+
+# ============================================================================
+# Ignore File
+# ============================================================================
+# Path to a .trivyignore file (one CVE ID per line, with optional comment).
+# Example:
+#   CVE-2023-12345  # Pending vendor fix
+#   CVE-2023-67890  # False positive for our use case
+ignorefile: ".trivyignore"
+
+# ============================================================================
+# Exit Code Policy
+# ============================================================================
+exit-code: 0
+# Set exit-code > 0 to fail CI builds on findings.
+# Common values:
+#   0:  Never fail
+#   1:  Fail on any finding
+#   2:  Fail only on vulnerabilities (allow secrets/misconfig warnings)
+
+# ============================================================================
+# Pipeline Integration
+# ============================================================================
+# Report all findings regardless of severity for SARIF output.
+# If true, overrides the severity filter for SARIF output only.
+sarif:
+  # Include all severities in SARIF output (even those filtered by --severity).
+  full-description: false
+
+# ============================================================================
+# License Scanning
+# ============================================================================
+license:
+  # Enable license scanning.
+  enabled: false
+
+  # Classify these licenses as forbidden during scan.
+  forbidden:
+    - AGPL-3.0
+    - BUSL-1.1
+    - SSPL-1.0
+
+  # Classify these licenses as requiring attribution.
+  attribution:
+    - MIT
+    - Apache-2.0
+    - BSD-2-Clause
+    - BSD-3-Clause
+    - ISC
+
+  # Severity for license violations.
+  severity: HIGH

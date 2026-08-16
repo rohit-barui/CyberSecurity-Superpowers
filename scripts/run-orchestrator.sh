@@ -1,45 +1,92 @@
-#!/bin/bash
-# Orchestrator runner - routes task to appropriate skill
-
+#!/usr/bin/env bash
+# Orchestrator runner - routes task to appropriate cybersecurity skill(s)
 set -euo pipefail
 
-TASK_TYPE="${1:-}"
-TASK_DESC="${2:-}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SKILLS_DIR="$SCRIPT_DIR/../skills/cybersecurity"
 
 usage() {
-  echo "Usage: $0 <task-type> <task-description>"
-  echo "Task types: design, implement, validate, operate"
-  exit 1
+  cat <<EOF
+Usage: $0 <mode> <description>
+
+Modes:
+  implement <desc>     Run secure-coding + static-analysis
+  threat-model <desc>  Run threat-modeling
+  full <desc>          Run all 5 skills sequentially
+
+Options:
+  --help               Show this help message
+
+Examples:
+  $0 implement "my-app"
+  $0 threat-model "my-app"
+  $0 full "my-app"
+EOF
+  exit 0
 }
 
-[ -z "$TASK_TYPE" ] && usage
-[ -z "$TASK_DESC" ] && usage
+MODE="${1:-}"
+DESCRIPTION="${2:-}"
 
-case "$TASK_TYPE" in
-  design)
-    echo "Routing to design pipeline: threat-modeling + security-architecture"
-    # Invoke threat-modeling skill
-    # Invoke security-architecture skill
-    ;;
+[ "$MODE" = "--help" ] && usage
+
+if [ -z "$MODE" ] || [ -z "$DESCRIPTION" ]; then
+  echo "ERROR: Both mode and description are required."
+  usage
+fi
+
+REPORTS=()
+
+run_skill() {
+  local skill="$1"
+  local script="$SKILLS_DIR/$skill/run.sh"
+  local flag="$2"
+  echo ""
+  echo "========================================"
+  echo "  Running: $skill"
+  echo "========================================"
+
+  if [ ! -f "$script" ]; then
+    echo "ERROR: Skill script not found: $script"
+    exit 1
+  fi
+
+  if bash "$script" "$flag" "$DESCRIPTION"; then
+    REPORTS+=("$skill: ✅ SUCCESS")
+  else
+    echo ""
+    echo "ERROR: $skill failed. Aborting."
+    exit 1
+  fi
+}
+
+case "$MODE" in
   implement)
-    echo "Routing to implementation pipeline: secure-coding + static-analysis"
-    # Invoke secure-coding skill
-    # Invoke static-analysis skill
+    run_skill "secure-coding" "--language" "auto"
+    run_skill "static-analysis" "--target-dir" "$DESCRIPTION"
     ;;
-  validate)
-    echo "Routing to validation pipeline: penetration-testing + compliance-audit"
-    # Invoke penetration-testing skill
-    # Invoke compliance-audit skill
+  threat-model)
+    run_skill "threat-modeling" "--project" "$DESCRIPTION"
     ;;
-  operate)
-    echo "Routing to operations pipeline: incident-response + secret-detection"
-    # Invoke incident-response skill
-    # Invoke secret-detection skill
+  full)
+    run_skill "threat-modeling" "--project" "$DESCRIPTION"
+    run_skill "secure-coding" "--language" "auto"
+    run_skill "static-analysis" "--target-dir" "."
+    run_skill "penetration-testing" "--target-app" "$DESCRIPTION"
+    run_skill "incident-response" "--incident-type" "ransomware"
     ;;
   *)
-    echo "Unknown task type: $TASK_TYPE"
+    echo "ERROR: Unknown mode '$MODE'"
     usage
     ;;
 esac
 
-echo "Orchestration complete."
+echo ""
+echo "========================================"
+echo "  Orchestration Complete - Summary"
+echo "========================================"
+for r in "${REPORTS[@]}"; do
+  echo "  $r"
+done
+echo "========================================"
+echo "Reports are in: artifacts/reports/"
