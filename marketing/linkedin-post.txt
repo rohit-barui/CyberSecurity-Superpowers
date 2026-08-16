@@ -1,29 +1,49 @@
-🚀 **I'm thrilled to announce the v0.1.0 release of Cybersecurity Superpowers!** 🚀
+🔥 AI agents write code 10x faster — but speed without security creates massive vulnerabilities at scale.
 
-After months of development, I'm open-sourcing a curated set of cybersecurity agent skills designed to supercharge your security workflows. Whether you're a DevSecOps engineer, a security analyst, or a developer building secure software, this toolkit has something for you.
+Today, I’m open-sourcing **CyberSecurity Superpowers** 🛡️ — the ultimate Enterprise DevSecOps & Security extension for AI coding agents (Claude Code, Gemini CLI, Cursor, OpenCode, Copilot CLI).
 
-**What's included:**
+It turns any AI assistant into an autonomous **CISO-grade DevSecOps engineer**.
 
-🔒 **Threat-Modeling Skill** — STRIDE-based threat analysis with CVSS v3.1 scoring, MITRE ATT&CK mapping, and OWASP/NIST mitigation recommendations.
+⭐ **GitHub Repo:** https://github.com/rohit-barui/CyberSecurity-Superpowers
 
-🔍 **Secure-Coding Skill** — Language-specific OWASP security checklists (JavaScript, TypeScript, Python, Go, Rust) with automated scanning to catch vulnerabilities before they reach production.
+---
 
-📋 **Static-Analysis Skill** — Source code analysis supporting SARIF, JSON, and markdown output. Integrates with semgrep, bandit, gosec, and npm audit with dry-run mock data support.
+### 💡 What is CyberSecurity Superpowers?
 
-🚨 **Penetration-Testing Skill** — Scoped red-team plans mapped to MITRE ATT&CK tactics and OWASP WSTG test cases.
+A 100% harness-agnostic, zero-lockin security framework that embeds end-to-end security directly into every phase of the SDLC.
 
-📝 **Incident-Response Skill** — Pre-built NIST SP 800-61 aligned playbooks for ransomware, data breaches, phishing, DDoS, and insider threats.
+### 🧩 6 Enterprise Superpowers Included:
 
-🔗 **Supply-Chain Security Skill** — SBOM generation in CycloneDX and SPDX formats with dependency vulnerability cross-referencing.
+1️⃣ **Threat Modeling** 🧠 — Automated STRIDE threat analysis, trust boundary mapping & CVSS v3.1 risk scoring.
+2️⃣ **Secure Coding** 🛡️ — Language-specific OWASP security checklist enforcement (JS, TS, Python, Go, Rust).
+3️⃣ **Static Analysis (SAST)** 🔍 — Multi-engine code & dependency vulnerability scanning (Semgrep, Bandit, Gosec, NPM Audit).
+4️⃣ **Penetration Testing** ⚔️ — Scoped red-team attack plan generator mapped to MITRE ATT&CK & OWASP WSTG.
+5️⃣ **Incident Response** 🚨 — NIST SP 800-61 aligned playbooks for Ransomware, Data Breaches, Phishing, DDoS & Insider Threats.
+6️⃣ **Supply-Chain Security** 📦 — Software Bill of Materials (SBOM) generation in CycloneDX 1.4 & SPDX 2.3 formats.
 
-**The orchestrator** ties it all together — run a single pipeline that chains all skills and produces consolidated security reports. Pre-commit and pre-push hooks enforce security gates automatically.
+---
 
-This project integrates seamlessly with OpenCode and Claude Code, making it dead simple to bring cybersecurity expertise into your AI-assisted development workflow.
+### 🤖 Autonomous ReAct Orchestration
 
-The entire codebase is open source, built with shell scripts and markdown for maximum portability and transparency. No proprietary tools. No lock-in.
+Includes a ReAct orchestrator (`scripts/run-orchestrator.sh`) that chains skills automatically:
 
-Check it out, star the repo, and feel free to contribute! Good first issues are tagged and ready for new contributors.
+```bash
+# Run full security review on any project
+bash scripts/run-orchestrator.sh full "Release Candidate v1.0"
+```
 
-👉 https://github.com/rohit-barui/CyberSecurity-Superpowers
+Also includes automated pre-commit SAST scanners & pre-push security gates!
 
-#Cybersecurity #DevSecOps #OpenSource #SecureCoding #IncidentResponse #ThreatModeling #SupplyChainSecurity #AI
+---
+
+### 🤝 Join the Open-Source Community
+
+100% Open Source under MIT. Built with shell scripts and structured Markdown for total transparency, speed, and portability.
+
+⭐ **Star the repo** to support open-source AI security!
+🍴 **Fork the project** to add custom security checks for your organization.
+💬 **Contributors welcome!** Curated "Good First Issues" are tagged and ready.
+
+👉 **Get started now:** https://github.com/rohit-barui/CyberSecurity-Superpowers
+
+#DevSecOps #Cybersecurity #OpenSource #ArtificialIntelligence #ClaudeCode #Gemini #Cursor #SoftwareEngineering #AppSec #ThreatModeling #Python #JavaScript
