@@ -112,6 +112,7 @@ ENDMATRIX
 if [[ "$DRY_RUN" == true ]]; then
   cat <<- ENDJSON
 {
+  "skill": "threat-modeling",
   "tool": "threat-modeling",
   "project": "$PROJECT_NAME",
   "timestamp": "$TIMESTAMP",
@@ -149,11 +150,21 @@ mkdir -p "$OUTPUT_DIR"
 if [[ "$FORMAT" == "md" ]]; then
   OUTPUT_FILE="${OUTPUT_DIR}/stride-model.md"
 
-  sed -e "s/{{PROJECT_NAME}}/${PROJECT_NAME}/g" \
-      -e "s/{{DATE}}/${TIMESTAMP}/g" \
-      -e "s/{{CVSS_MATRIX}}/${CVSS_MATRIX}/g" \
-      -e "s/{{STRIDE_TABLE}}/${STRIDE_TABLE}/g" \
-      "$TEMPLATE" > "$OUTPUT_FILE"
+  awk -v proj="$PROJECT_NAME" -v dt="$TIMESTAMP" -v cvss="$CVSS_MATRIX" -v stride="$STRIDE_TABLE" '
+    {
+      gsub(/{{PROJECT_NAME}}/, proj);
+      gsub(/{{DATE}}/, dt);
+      if (index($0, "{{CVSS_MATRIX}}")) {
+        print cvss;
+        next;
+      }
+      if (index($0, "{{STRIDE_TABLE}}")) {
+        print stride;
+        next;
+      }
+      print $0;
+    }
+  ' "$TEMPLATE" > "$OUTPUT_FILE"
 
   echo -e "${GREEN}✓${NC} Threat model written to ${OUTPUT_FILE}"
   exit 0

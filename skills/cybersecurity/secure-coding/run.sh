@@ -82,6 +82,7 @@ if $DRY_RUN; then
   ITEM_COUNT=$(echo "$CHECKLIST_ITEMS" | grep -c '' || true)
   cat <<EOF
 {
+  "skill": "secure-coding",
   "project": "$PROJECT_NAME",
   "language": "$LANGUAGE",
   "date": "$DATE",

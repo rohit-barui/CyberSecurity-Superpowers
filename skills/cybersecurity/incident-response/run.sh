@@ -476,8 +476,10 @@ PLAYBOOK
 if [[ "${DRY_RUN}" == true ]]; then
     cat <<JSON
 {
+  "skill": "incident-response",
   "playbook": "incident-playbook.md",
   "incident_type": "${INCIDENT_TYPE}",
+  "incidentType": "${INCIDENT_TYPE}",
   "severity": "${SEVERITY}",
   "date_generated": "${DATE}",
   "phases": [

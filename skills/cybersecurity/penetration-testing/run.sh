@@ -148,6 +148,7 @@ if $DRY_RUN; then
 {
   "skill": "penetration-testing",
   "target_app": "$TARGET_APP",
+  "targetApp": "$TARGET_APP",
   "scope": "$SCOPE",
   "output_dir": "$OUTPUT_DIR",
   "date": "$DATE",
@@ -181,12 +182,19 @@ mkdir -p "$OUTPUT_DIR"
 
 OUTPUT_FILE="${OUTPUT_DIR}/pentest-plan.md"
 
-sed -e "s/{{TARGET_APP}}/$TARGET_APP/g" \
-    -e "s/{{SCOPE}}/$SCOPE/g" \
-    -e "s/{{DATE}}/$DATE/g" \
-    -e "s/{{TEST_CASES}}/$TEST_CASES/g" \
-    -e "s/{{TIMELINE}}/$TIMELINE/g" \
-    "$TEMPLATE_FILE" > "$OUTPUT_FILE"
+awk -v app="$TARGET_APP" -v scope="$SCOPE" -v dt="$DATE" -v time="$TIMELINE" -v tc="$TEST_CASES" '
+  {
+    gsub(/{{TARGET_APP}}/, app);
+    gsub(/{{SCOPE}}/, scope);
+    gsub(/{{DATE}}/, dt);
+    gsub(/{{TIMELINE}}/, time);
+    if (index($0, "{{TEST_CASES}}")) {
+      print tc;
+      next;
+    }
+    print $0;
+  }
+' "$TEMPLATE_FILE" > "$OUTPUT_FILE"
 
 echo "SUCCESS: Pentest plan written to $OUTPUT_FILE"
 exit 0

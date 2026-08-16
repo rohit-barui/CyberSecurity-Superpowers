@@ -198,19 +198,23 @@ SUMMARY
   template_file="$(realpath "$(dirname "$0")/templates/security-scan-report.md" 2>/dev/null || echo "")"
 
   if [ -n "$template_file" ] && [ -f "$template_file" ]; then
-    sed -e "s/{{PROJECT_NAME}}/$project_name/g" \
-        -e "s/{{DATE}}/$date_str/g" \
-        -e "s/{{TOOLS_USED}}/$tools_str/g" \
-        -e "/{{SUMMARY_TABLE}}/{
-          r /dev/stdin
-          d
-        }" \
-        -e "/{{FINDINGS_TABLE}}/{
-          r /dev/stdin
-          d
-        }" "$template_file" > "$report_file" <<EOF
-$summary_table
-EOF
+    findings_fmt=$(echo -e "$findings_rows")
+    awk -v proj="$project_name" -v dt="$date_str" -v tools="$tools_str" -v sum="$summary_table" -v find="$findings_fmt" '
+      {
+        gsub(/{{PROJECT_NAME}}/, proj);
+        gsub(/{{DATE}}/, dt);
+        gsub(/{{TOOLS_USED}}/, tools);
+        if (index($0, "{{SUMMARY_TABLE}}")) {
+          print sum;
+          next;
+        }
+        if (index($0, "{{FINDINGS_TABLE}}")) {
+          printf "%s", find;
+          next;
+        }
+        print $0;
+      }
+    ' "$template_file" > "$report_file"
   else
     cat > "$report_file" <<REPORT
 # Security Scan Report
@@ -373,8 +377,17 @@ JSONEOF
 # ---- Main ----
 main() {
   if [ "$DRY_RUN" = true ]; then
-    echo "DRY RUN: Using mock findings"
-    load_mock_findings
+    cat <<EOF
+{
+  "skill": "static-analysis",
+  "tools": ["semgrep", "bandit", "gosec", "npm-audit"],
+  "target_dir": "$TARGET_DIR",
+  "output_dir": "$OUTPUT_DIR",
+  "format": "$FORMAT",
+  "status": "dry-run"
+}
+EOF
+    exit 0
   else
     # Try to detect and run tools
     run_semgrep
