@@ -1,12 +1,30 @@
 name: Release
 on:
   push:
-    branches: [main]
     tags:
       - 'v*.*.*'
 
 jobs:
-  release:
+  pypi-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install build tools
+        run: pip install build
+      - name: Build package
+        run: python -m build
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+
+  github-release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -46,12 +64,10 @@ jobs:
           repo_name=$(basename ${{ github.repository }})
           git archive --format=tar.gz --output=artifacts/$repo_name-${{ env.VERSION }}.tar.gz HEAD
           git archive --format=zip --output=artifacts/$repo_name-${{ env.VERSION }}.zip HEAD
-      - name: Include artifacts directory
+      - name: Include PyPI artifacts
         run: |
-          if [ -d artifacts ] && [ "$(ls -A artifacts 2>/dev/null)" ]; then
-            echo "artifacts directory has content"
-          else
-            mkdir -p artifacts
+          if [ -d dist ]; then
+            cp dist/*.tar.gz dist/*.whl artifacts/ 2>/dev/null || true
           fi
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -62,5 +78,6 @@ jobs:
           files: |
             artifacts/*.tar.gz
             artifacts/*.zip
+            artifacts/*.whl
           draft: false
           prerelease: false
