@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-08-16
+
+### Added
+
+- **PyPI Package**: Published `cybersec-superpowers` to PyPI. Install via `pip install cybersec-superpowers` or `pipx install cybersec-superpowers`.
+- **Python CLI Wrapper**: `cybersec` CLI entry point (`src/cybersec_superpowers/cli.py`) wrapping all bash scripts — supports `threat-model`, `secure-code`, `static-analysis`, `pentest`, `incident-response`, `full`, `demo`, `sbom`, `setup` commands.
+- **One-Click Installer**: `curl -sSL https://raw.githubusercontent.com/rohit-barui/CyberSecurity-Superpowers/main/install.sh | bash` — auto-detects OS, installs to `~/.cybersec-superpowers/`, adds to PATH.
+- **Makefile**: Build, dev install, publish (test + prod), test, lint, demo, pipx-install targets.
+- **Release Workflow**: Auto-publishes to PyPI on tag push via `pypa/gh-action-pypi-publish`. Also generates GitHub Release with archives + .whl assets.
+- **GitHub About**: Repository description and 10 topics set.
+
+### Fixed
+
+- **Docs Audit**: 19 files corrected — critical issues incl. orchestrator arg passing, demo output filenames, marketing claims; 12 docs/skills high-priority fixes.
+- **CI Pipeline**: shellcheck non-blocking, `chmod +x` per job, skill-tests path, build summary step.
+- **License metadata**: Updated `pyproject.toml` to use SPDX expression format (fixes setuptools deprecation warnings).
+
 ## [0.1.0] - 2026-08-16
 
 ### Added
