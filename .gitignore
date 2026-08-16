@@ -72,3 +72,9 @@ artifacts/reports/*.md
 !artifacts/reports/example-*.md
 artifacts/sbom/*.json
 !artifacts/sbom/example-*.json
+
+# PyPI build artifacts
+dist/
+build/
+*.egg-info/
+src/*.egg-info/

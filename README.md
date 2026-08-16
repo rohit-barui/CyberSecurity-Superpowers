@@ -5,6 +5,7 @@
 
 [![CI Pipeline](https://github.com/rohit-barui/CyberSecurity-Superpowers/actions/workflows/ci.yml/badge.svg)](https://github.com/rohit-barui/CyberSecurity-Superpowers/actions/workflows/ci.yml)
 [![Release](https://github.com/rohit-barui/CyberSecurity-Superpowers/actions/workflows/release.yml/badge.svg)](https://github.com/rohit-barui/CyberSecurity-Superpowers/actions/workflows/release.yml)
+[![PyPI](https://img.shields.io/badge/pypi-cybersec--superpowers-blue?style=flat-square&logo=pypi)](https://pypi.org/project/cybersec-superpowers/)
 [![Skills](https://img.shields.io/badge/superpowers-6_core_skills-007ACC?style=flat-square&logo=shield)](https://github.com/rohit-barui/CyberSecurity-Superpowers)
 [![Version](https://img.shields.io/badge/version-v0.1.0-brightgreen?style=flat-square)](https://github.com/rohit-barui/CyberSecurity-Superpowers/releases)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
@@ -28,17 +29,29 @@ AI coding assistants are faster than ever at writing code — but speed without 
 
 ## 🚀 Quickstart
 
-Get up and running in 30 seconds:
+Get up and running in 30 seconds. Choose your install method:
+
+### 📦 One-Click Install (curl | bash)
 
 ```bash
-# Clone the repository
+curl -sSL https://raw.githubusercontent.com/rohit-barui/CyberSecurity-Superpowers/main/install.sh | bash
+cybersec demo
+```
+
+### 🐍 PyPI (pip / pipx)
+
+```bash
+pipx install cybersec-superpowers
+# or: pip install --user cybersec-superpowers
+cybersec threat-model "My App"
+```
+
+### 📁 Git Clone
+
+```bash
 git clone https://github.com/rohit-barui/CyberSecurity-Superpowers.git
 cd CyberSecurity-Superpowers
-
-# Initialize workspace & verify environment
 bash scripts/setup.sh
-
-# Run the end-to-end security demo
 bash examples/demo-project/run-demo.sh
 ```
 

@@ -1,0 +1,18 @@
+include VERSION
+include README.md
+include LICENSE
+recursive-include scripts/ *.sh
+recursive-include skills/cybersecurity/ *
+recursive-include skills/orchestration/ *
+recursive-include tools/ *
+recursive-include hooks/ *.sh
+recursive-include tests/ *.sh
+recursive-include tests/ *.json
+recursive-include examples/demo-project/ *
+recursive-include artifacts/reports/ *.md
+recursive-include artifacts/sbom/ *.json
+recursive-include docs/ *
+recursive-include assets/ *
+recursive-include marketing/ *
+recursive-include .claude-plugin/ *
+recursive-include .opencode/ *
