@@ -4,18 +4,18 @@
 > Embed automated threat modeling, secure coding, SAST scanning, red-team penetration testing, NIST incident response, and supply-chain security into any agentic workflow.
 
 [![CI Pipeline](https://github.com/rohit-barui/CyberSecurity-Superpowers/actions/workflows/ci.yml/badge.svg)](https://github.com/rohit-barui/CyberSecurity-Superpowers/actions/workflows/ci.yml)
-[![Release](https://github.com/rohit-barui/CyberSecurity-Superpowers/actions/workflows/release.yml/badge.svg)](https://github.com/rohit-barui/CyberSecurity-Superpowers/actions/workflows/release.yml)
+[![Release](https://github.com/rohit-barui/CyberSecurity-Superpowers/actions/workflows/release.yml/badge.svg)](https://github.com/rohit-barui/CyberSecurity-Superpowers/actions/workflows/release.yml[...]
 [![PyPI](https://img.shields.io/badge/pypi-cybersec--superpowers-blue?style=flat-square&logo=pypi)](https://pypi.org/project/cybersec-superpowers/)
 [![Skills](https://img.shields.io/badge/superpowers-6_core_skills-007ACC?style=flat-square&logo=shield)](https://github.com/rohit-barui/CyberSecurity-Superpowers)
 [![Version](https://img.shields.io/badge/version-v0.1.0-brightgreen?style=flat-square)](https://github.com/rohit-barui/CyberSecurity-Superpowers/releases)
-[![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
+[![License](https://img.shields.io/badge/license-AGPL--3.0-blue?style=flat-square)](LICENSE)
 [![Standards](https://img.shields.io/badge/standards-OWASP_|_NIST_|_MITRE_ATT%26CK-orange?style=flat-square)](https://github.com/rohit-barui/CyberSecurity-Superpowers)
 
 ---
 
 ## ⚡ Why CyberSecurity Superpowers is THE Go-To Skill Set
 
-AI coding assistants are faster than ever at writing code — but speed without security creates vulnerabilities at scale. **CyberSecurity Superpowers** transforms any AI assistant (Claude Code, Gemini CLI, Cursor, OpenCode, Copilot) into an autonomous **CISO-grade DevSecOps engineer**.
+AI coding assistants are faster than ever at writing code — but speed without security creates vulnerabilities at scale. **CyberSecurity Superpowers** transforms any AI assistant (Claude Code, G[...]
 
 ### 🌟 Key Differentiators & Benefits
 
@@ -87,10 +87,10 @@ The system utilizes an autonomous **ReAct Orchestrator** (`scripts/run-orchestra
                                   │
       ┌───────────────┬───────────┼───────────┬───────────────┐
       ▼               ▼           ▼           ▼               ▼
-┌───────────┐   ┌───────────┐ ┌───────────┐ ┌───────────┐   ┌───────────┐
+┌───────────┐   ┌───────────┐ ┌───────────┐ ┌───────────┐   ┌─────────��[...]
 │  Threat   │   │  Secure   │ │  Static   │ │   Pentest │   │ Incident  │
 │ Modeling  │   │  Coding   │ │ Analysis  │ │   Plan    │   │ Response  │
-└─────┬─────┘   └─────┬─────┘ └─────┬─────┘ └─────┬─────┘   └─────┬─────┘
+└─────┬─────┘   └─────┬─────┘ └─────┬─────┘ └─────┬─────┘   └─────┬───��[...]
       │               │           │           │               │
       └───────────────┴───────────┼───────────┴───────────────┘
                                   │
@@ -170,7 +170,7 @@ We welcome community contributions! Check out our [Good First Issues](docs/good-
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE). Feel free to use, adapt, and build upon it!
+This project is licensed under the [GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE). Feel free to use, adapt, and build upon it under the terms of the AGPL-3.0.
 
 ---
 
