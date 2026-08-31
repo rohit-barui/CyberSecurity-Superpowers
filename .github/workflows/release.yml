@@ -3,28 +3,39 @@ on:
   push:
     tags:
       - 'v*.*.*'
+  workflow_dispatch:
 
 jobs:
   pypi-publish:
+    name: Publish to PyPI
     runs-on: ubuntu-latest
+    environment: cybersecurity-superpowers
     permissions:
       id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: "3.11"
+
       - name: Install build tools
-        run: pip install build
+        run: |
+          python -m pip install --upgrade pip build twine
+
       - name: Build package
         run: python -m build
+
+      - name: Verify package
+        run: twine check dist/*
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
 
   github-release:
+    name: Create GitHub Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -32,6 +43,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Read VERSION
         run: |
           if [ -f VERSION ]; then
@@ -39,6 +51,7 @@ jobs:
           else
             echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
           fi
+
       - name: Generate release notes
         run: |
           if [ -f CHANGELOG.md ]; then
@@ -58,17 +71,20 @@ jobs:
           else
             echo "Release ${{ github.ref_name }}" > release-notes.md
           fi
+
       - name: Create release archive
         run: |
           mkdir -p artifacts
           repo_name=$(basename ${{ github.repository }})
           git archive --format=tar.gz --output=artifacts/$repo_name-${{ env.VERSION }}.tar.gz HEAD
           git archive --format=zip --output=artifacts/$repo_name-${{ env.VERSION }}.zip HEAD
+
       - name: Include PyPI artifacts
         run: |
           if [ -d dist ]; then
             cp dist/*.tar.gz dist/*.whl artifacts/ 2>/dev/null || true
           fi
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
