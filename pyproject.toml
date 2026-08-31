@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cybersec-superpowers"
-version = "0.1.0"
+version = "0.1.1"
 description = "Enterprise-grade cybersecurity orchestration platform — STRIDE threat modeling, OWASP secure coding, SAST, pentest plans, incident response playbooks, and SBOM supply-chain security as composable agent skills"
 readme = "README.md"
 license = {text = "MIT"}
